@@ -1,0 +1,335 @@
+/* ========================================= */
+/* 🎨 DESIGN SYSTEM VARIABLES */
+/* ========================================= */
+
+:root {
+  --primary: #ffb703;
+  --primary-dark: #fb8500;
+  --dark: #1e1e2f;
+  --dark-light: #2c2c3e;
+  --gray-bg: #f5f7fa;
+  --text-main: #222;
+  --text-light: #777;
+  --white: #ffffff;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+/* ========================================= */
+/* 🌍 GLOBAL RESET */
+/* ========================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+body {
+  background: var(--gray-bg);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* ========================================= */
+/* 🚖 NAVBAR */
+/* ========================================= */
+
+.navbar {
+  background: var(--dark);
+  padding: 16px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+}
+
+.navbar h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.navbar a {
+  color: var(--white);
+  margin-left: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.navbar a:hover {
+  color: var(--primary);
+}
+
+/* ========================================= */
+/* 🚖 HERO SECTION */
+/* ========================================= */
+
+.hero {
+  background: linear-gradient(135deg, var(--dark) 60%, var(--primary) 40%);
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--white);
+}
+
+.hero h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.hero p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* ========================================= */
+/* 🚖 BUTTON SYSTEM */
+/* ========================================= */
+
+.btn {
+  padding: 12px 22px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* ========================================= */
+/* 🚖 CARD SYSTEM */
+/* ========================================= */
+
+.card {
+  background: var(--white);
+  padding: 25px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* ========================================= */
+/* 🚖 BOOKING FORM */
+/* ========================================= */
+
+.form-container {
+  max-width: 600px;
+  margin: 60px auto;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid #ddd;
+  margin-bottom: 18px;
+  transition: var(--transition);
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 183, 3, 0.3);
+}
+
+/* ========================================= */
+/* 🚖 DASHBOARD LAYOUT */
+/* ========================================= */
+
+.dashboard {
+  padding: 50px;
+}
+
+.dashboard h2 {
+  margin-bottom: 30px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+/* Dashboard Stats Cards */
+
+.widget {
+  background: var(--dark-light);
+  color: var(--white);
+  padding: 30px;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.widget h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+
+.widget .number {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================= */
+/* 🚖 TABLE DESIGN */
+/* ========================================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+th {
+  background: var(--dark);
+  color: var(--primary);
+  padding: 15px;
+  text-align: left;
+}
+
+td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+  background: #fafafa;
+}
+
+/* ========================================= */
+/* 🚖 STATUS BADGES */
+/* ========================================= */
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-active {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success);
+}
+
+.badge-pending {
+  background: rgba(255, 183, 3, 0.15);
+  color: var(--primary-dark);
+}
+
+.badge-completed {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--dark);
+}
+
+/* ========================================= */
+/* 🚖 MAP SECTION */
+/* ========================================= */
+
+.map-container {
+  height: 450px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================= */
+/* 🚖 FOOTER */
+/* ========================================= */
+
+.footer {
+  background: var(--dark);
+  color: var(--white);
+  text-align: center;
+  padding: 20px;
+  margin-top: 60px;
+}
+
+/* ========================================= */
+/* 📱 RESPONSIVE */
+/* ========================================= */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dashboard {
+    padding: 25px;
+  }
+
+  .hero h2 {
+    font-size: 28px;
+  }
+}
+
+/* ========================================= */
+/* 🌍 LOCATION AUTO-SUGGESTION SYSTEM */
+/* ========================================= */
+
+
+
+.manual-location-card {
+  background: var(--dark-light);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-top: 20px;
+}
+
+.manual-location-card h3 {
+  color: var(--primary);
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.manual-location-card .dim-text {
+  color: #aaa;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
