@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://cab-booking1-iota.vercel.app/api"
+  baseURL: "https://cab-booking1.onrender.com/api"
 });
 
 API.interceptors.request.use((req) => {

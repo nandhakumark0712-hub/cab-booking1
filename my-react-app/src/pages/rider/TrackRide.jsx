@@ -5,7 +5,7 @@ import MapComponent from "../../components/MapComponent";
 import API from "../../services/api";
 
 
-const socket = io("https://cab-booking1-iota.vercel.app");
+const socket = io("https://cab-booking1.onrender.com");
 
 // Status configuration
 const STATUS_STEPS = [
