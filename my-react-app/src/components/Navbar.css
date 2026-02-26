@@ -341,5 +341,126 @@
     display: none;
   }
 
-  /* Mobile Menu would go here */
+  /* Hamburger Toggle */
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 5100;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #fbbf24;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Mobile Nav Links */
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: calc(100vh - 70px);
+    background-color: #1e1e2f;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px 30px;
+    gap: 20px;
+    transition: left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.4);
+    z-index: 5000;
+  }
+
+  .nav-links.mobile-open {
+    left: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-link {
+    font-size: 16px;
+    display: block;
+    width: 100%;
+  }
+
+  /* Dropdown on Mobile */
+  .dropdown-content {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0 0 0 15px;
+    transform: none;
+    height: auto;
+    margin-top: 10px;
+    border-left: 2px solid rgba(251, 191, 36, 0.2);
+    border-radius: 0;
+  }
+
+  .dropdown-content .nav-link {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .dropdown-content .nav-link:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .dropbtn {
+    font-size: 16px;
+    padding: 10px 0;
+  }
+
+  /* Actions hiding */
+  .desktop-only {
+    display: none;
+  }
+
+  .navbar-actions {
+    gap: 12px;
+  }
+
+  .mobile-only-profile {
+    display: block !important;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-links .user-profile {
+    padding: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.mobile-only-profile {
+  display: none;
 }

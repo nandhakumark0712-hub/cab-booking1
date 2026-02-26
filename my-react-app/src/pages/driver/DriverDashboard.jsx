@@ -525,6 +525,22 @@ function DriverDashboard() {
         .upload-field input { width: 100%; padding: 12px; border: 2px dashed rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; border-radius: 12px; font-size: 14px; cursor: pointer; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; }
         .btn-text { background: none; border: none; color: #888; font-weight: 700; cursor: pointer; }
+
+        @media (max-width: 1024px) {
+          .map-view-container { height: 400px; }
+          .balance { font-size: 28px; }
+        }
+
+        @media (max-width: 768px) {
+          .dashboard-grid { grid-template-columns: 1fr; }
+          .map-view-container { height: 350px; }
+          .active-trip-panel { padding: 15px; }
+          .customer-info small { max-width: 180px; }
+          .request-card { padding: 25px; }
+          .request-header h2 { font-size: 20px; }
+          .btn-accept, .btn-reject { padding: 14px; font-size: 14px; }
+          .modal-content { padding: 20px; margin: 10px; }
+        }
       `}</style>
     </div>
   );

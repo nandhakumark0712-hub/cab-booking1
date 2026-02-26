@@ -432,10 +432,27 @@ const AdminDashboard = () => {
         .gold-text { color: #fbbf24; font-weight: 800; }
 
         /* Scrollbar styling */
-        .admin-main::-webkit-scrollbar { width: 8px; }
-        .admin-main::-webkit-scrollbar-track { background: transparent; }
-        .admin-main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
         .admin-main::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        @media (max-width: 1024px) {
+          .admin-sidebar { width: 220px; }
+          .admin-content { padding: 25px; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+          .admin-layout { flex-direction: column; height: auto; }
+          .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px; }
+          .admin-brand { margin-bottom: 15px; }
+          .admin-nav { flex-direction: row; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+          .admin-nav button { padding: 10px 15px; white-space: nowrap; font-size: 13px; }
+          .admin-header { flex-direction: column; gap: 15px; align-items: flex-start; padding: 20px; }
+          .stats-grid { grid-template-columns: 1fr; }
+          .form-grid { grid-template-columns: 1fr; }
+          .settings-form { padding: 20px; }
+          .table-wrapper { overflow-x: auto; }
+          .admin-table th, .admin-table td { padding: 12px 15px; font-size: 13px; }
+        }
       `}</style>
     </div>
   );

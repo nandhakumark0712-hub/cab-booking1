@@ -275,8 +275,8 @@ function TrackRide() {
 
       <style>{`
         .track-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 70px); padding: 20px; background: transparent; }
-        .track-page-container { display: flex; width: 100%; max-width: 1100px; height: 620px; background: rgba(10, 10, 15, 0.6); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
-        .map-section { flex: 7; background: #1a1a1a; position: relative; }
+        .track-page-container { display: flex; width: 100%; max-width: 1100px; min-height: 620px; background: rgba(10, 10, 15, 0.6); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
+        .map-section { flex: 7; background: #1a1a1a; position: relative; min-height: 400px; }
         .status-sidebar { flex: 3; min-width: 320px; padding: 25px; border-left: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; color: white; }
         
         .ride-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -296,19 +296,27 @@ function TrackRide() {
         .divider { border: 0; border-top: 1px solid rgba(255,255,255,0.08); margin: 10px 0 25px; }
         
         .driver-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .driver-info { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .driver-avatar { width: 50px; height: 50px; background: rgba(255,255,255,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .driver-details { flex: 1; }
         .driver-name { display: block; font-weight: 700; color: white; }
         .driver-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+        .vehicle-details { display: flex; align-items: center; margin-bottom: 20px; }
         .plate-number { font-weight: 800; color: #1e1e2f; background: #fbbf24; padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
         .car-model { color: rgba(255,255,255,0.6); }
+        .action-buttons { display: flex; gap: 10px; }
         
         .btn-call, .btn-message { flex: 1; padding: 10px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.03); color: white; transition: 0.2s; }
         .btn-call:hover, .btn-message:hover { background: rgba(255,255,255,0.08); }
         
+        .searching-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: center; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.05); }
+        .trip-actions { margin-top: auto; }
         .btn-cancel { width: 100%; padding: 12px; border: none; background: rgba(239, 68, 68, 0.15); color: #f87171; font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(239, 68, 68, 0.1); }
         .btn-cancel:hover { background: rgba(239, 68, 68, 0.25); }
         
         .driver-overlay-indicator { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15,15,25,0.85); backdrop-filter: blur(15px); color: white; padding: 10px 20px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); font-size: 13px; font-weight: 700; z-index: 1000; border: 1px solid rgba(255,255,255,0.1); }
+
+        .sos-btn { position: fixed; bottom: 30px; right: 30px; z-index: 3000; width: 60px; height: 60px; background: #ef4444; color: white; border: none; border-radius: 50%; font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(239,68,68,0.4); transition: 0.3s; }
 
         /* Feedback Modal */
         .feedback-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }

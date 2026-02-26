@@ -183,17 +183,17 @@ function BookRide() {
 
       <style>{`
         .formal-booking-page { min-height: calc(100vh - 70px); background: transparent; padding: 25px; display: flex; justify-content: center; }
-        .layout-grid { display: flex; width: 100%; max-width: 1400px; gap: 25px; height: 780px; }
+        .layout-grid { display: flex; width: 100%; max-width: 1400px; gap: 25px; min-height: 700px; }
         
-        .main-content-area { flex: 7; display: flex; flex-direction: column; gap: 20px; }
-        .dashboard-map-wrapper { flex: 1; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; border: 1px solid rgba(255,255,255,0.1); }
+        .main-content-area { flex: 7; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+        .dashboard-map-wrapper { min-height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; border: 1px solid rgba(255,255,255,0.1); }
         .map-overlay-stats { position: absolute; bottom: 20px; left: 20px; background: rgba(30,30,47,0.8); backdrop-filter: blur(5px); color: white; padding: 8px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
         .travel-mode-panel { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(30px) saturate(160%); padding: 30px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
         .panel-label { margin-bottom: 25px; font-size: 20px; font-weight: 900; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); display: inline-block; position: relative; }
         .panel-label::after { content: ""; position: absolute; bottom: -8px; left: 0; width: 50px; height: 4px; background: #fbbf24; border-radius: 2px; }
-        .vehicle-selection-grid { display: flex; gap: 20px; justify-content: space-between; }
-        .vehicle-selection-card { flex: 1; min-width: 180px; height: 160px; padding: 20px; background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.05); border-radius: 18px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; text-align: center; color: white; }
+        .vehicle-selection-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .vehicle-selection-card { flex: 0 0 180px; height: 160px; padding: 20px; background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.05); border-radius: 18px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; text-align: center; color: white; }
         .vehicle-selection-card:hover { border-color: #fbbf24; transform: translateY(-5px); background: rgba(251, 191, 36, 0.05); }
         .vehicle-selection-card.active { border-color: #fbbf24; background: #fbbf24; color: #1e1e2f; transform: scale(1.02); box-shadow: 0 12px 25px rgba(251,191,36,0.3); }
         .vehicle-icon { font-size: 32px; margin-bottom: 12px; }
@@ -203,8 +203,8 @@ function BookRide() {
         .active .vehicle-price { color: #1e1e2f; }
         .active .vehicle-info .desc { opacity: 1; color: #1e1e2f; font-weight: 600; }
 
-        .sidebar-action-area { flex: 3; min-width: 400px; }
-        .executive-card { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(30px) saturate(180%); padding: 35px; border-radius: 20px; height: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; overflow-y: auto; color: white; }
+        .sidebar-action-area { flex: 3; min-width: 320px; }
+        .executive-card { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(30px) saturate(180%); padding: 35px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; color: white; }
         .brand-h2 { font-size: 24px; font-weight: 900; color: #fbbf24; margin-bottom: 25px; }
 
         .booking-type-selector { display: flex; background: rgba(255,255,255,0.03); padding: 5px; border-radius: 12px; margin-bottom: 30px; }
@@ -215,12 +215,6 @@ function BookRide() {
         .form-field label { display: block; font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-bottom: 8px; }
         .form-field input { width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.05); border-radius: 12px; font-size: 15px; transition: all 0.2s; color: white; }
         .form-field input:focus { outline: none; border-color: #fbbf24; background: rgba(255,255,255,0.08); }
-        .input-with-dot { position: relative; }
-        .input-with-dot::before { content: ""; position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; z-index: 5; }
-        .green-dot::before { background: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-        .red-dot::before { background: #ef4444; box-shadow: 0 0 10px rgba(239,68,68,0.3); }
-        .input-with-dot input { padding-left: 40px; }
-
 
         .summary-executive-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; padding: 20px; margin: 25px 0 30px; }
         .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; }
@@ -230,19 +224,20 @@ function BookRide() {
         .fare-row strong { font-size: 26px; color: #fbbf24; }
 
         .confirm-booking-full-btn { width: 100%; padding: 18px; border: none; border-radius: 15px; background: #fbbf24; color: #1e1e2f; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s; box-shadow: 0 10px 25px rgba(251,191,36,0.3); }
-        .confirm-booking-full-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(251,191,36,0.4); }
-        .confirm-booking-full-btn:active { transform: translateY(0); }
 
-        .sos-action-btn { position: fixed; top: 100px; right: 40px; z-index: 3000; width: 60px; height: 60px; background: #ef4444; color: white; border: none; border-radius: 50%; font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(239,68,68,0.4); transition: 0.3s; }
+        .sos-action-btn { position: fixed; bottom: 30px; right: 30px; z-index: 3000; width: 60px; height: 60px; background: #ef4444; color: white; border: none; border-radius: 50%; font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(239,68,68,0.4); transition: 0.3s; }
         .sos-action-btn:hover { transform: scale(1.1) rotate(5deg); }
 
         @media (max-width: 1110px) {
           .layout-grid { flex-direction: column; height: auto; }
-          .sidebar-action-area { min-width: 100%; }
-          .main-content-area { height: 600px; }
+          .sidebar-action-area { min-width: 100%; order: 2; }
+          .main-content-area { height: auto; min-height: 400px; order: 1; }
+          .dashboard-map-wrapper { min-height: 350px; }
+          .travel-mode-panel { padding: 20px; }
+          .vehicle-selection-grid { justify-content: flex-start; }
+          .executive-card { padding: 25px; }
+          .formal-booking-page { padding: 15px; }
         }
-        .searching-loader { font-size: 11px; color: #fbbf24; font-weight: 700; margin-top: 5px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
       `}</style>
     </div>
   );

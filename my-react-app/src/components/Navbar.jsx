@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import "./Navbar.css"; // External CSS file
 
 function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const role = sessionStorage.getItem("role"); // rider / driver / admin
   const username = sessionStorage.getItem("username"); // optional
@@ -10,12 +11,22 @@ function Navbar() {
   const logout = () => {
     sessionStorage.clear();
     navigate("/");
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleNavClick = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="brand" onClick={() => navigate("/")}>
+        <div className="brand" onClick={() => handleNavClick("/")}>
           <div className="logo-wrapper">
             <svg width="45" height="45" viewBox="0 0 100 100" className="company-logo hyper-logo">
               <defs>
@@ -63,14 +74,21 @@ function Navbar() {
           <span className="brand-text">WeeFly Cab</span>
         </div>
 
-        <ul className="nav-links">
+        {/* Hamburger Toggle */}
+        <div className={`menu-toggle ${isMobileMenuOpen ? "active" : ""}`} onClick={toggleMobileMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <ul className={`nav-links ${isMobileMenuOpen ? "mobile-open" : ""}`}>
           <li>
-            <NavLink to="/" className="nav-link">Home</NavLink>
+            <NavLink to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
           </li>
 
           {/* New Feature: About Us (Scroll) */}
           <li>
-            <a href="#about" className="nav-link">About Us</a>
+            <a href="#about" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>About Us</a>
           </li>
 
           {/* Dropdown for Rider */}
@@ -78,9 +96,9 @@ function Navbar() {
             <li className="dropdown">
               <span className="dropbtn">Services <span className="arrow">▿</span></span>
               <ul className="dropdown-content">
-                <li><NavLink to="/book" className="nav-link">Book Ride</NavLink></li>
-                <li><NavLink to="/track" className="nav-link">Track Ride</NavLink></li>
-                <li><NavLink to="/history" className="nav-link">Ride History</NavLink></li>
+                <li><NavLink to="/book" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Book Ride</NavLink></li>
+                <li><NavLink to="/track" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Track Ride</NavLink></li>
+                <li><NavLink to="/history" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Ride History</NavLink></li>
               </ul>
             </li>
           )}
@@ -90,9 +108,9 @@ function Navbar() {
             <li className="dropdown">
               <span className="dropbtn">Driver Portal <span className="arrow">▿</span></span>
               <ul className="dropdown-content">
-                <li><NavLink to="/driver/dashboard" className="nav-link">Dashboard</NavLink></li>
-                <li><NavLink to="/earnings" className="nav-link">Earnings</NavLink></li>
-                <li><NavLink to="/availability" className="nav-link">Availability</NavLink></li>
+                <li><NavLink to="/driver/dashboard" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</NavLink></li>
+                <li><NavLink to="/earnings" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Earnings</NavLink></li>
+                <li><NavLink to="/availability" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Availability</NavLink></li>
               </ul>
             </li>
           )}
@@ -102,10 +120,26 @@ function Navbar() {
             <li className="dropdown">
               <span className="dropbtn">Admin Panel <span className="arrow">▿</span></span>
               <ul className="dropdown-content">
-                <li><NavLink to="/admin/dashboard" className="nav-link">Dashboard</NavLink></li>
-                <li><NavLink to="/reports" className="nav-link">Ride Reports</NavLink></li>
-                <li><NavLink to="/drivers" className="nav-link">Manage Drivers</NavLink></li>
+                <li><NavLink to="/admin/dashboard" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</NavLink></li>
+                <li><NavLink to="/reports" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Ride Reports</NavLink></li>
+                <li><NavLink to="/drivers" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Manage Drivers</NavLink></li>
               </ul>
+            </li>
+          )}
+
+          {/* User Profile for Mobile (shows at the bottom of the list) */}
+          {role && (
+            <li className="mobile-only-profile">
+              <div className="user-profile">
+                <div className="user-avatar">
+                  {username ? username[0].toUpperCase() : "U"}
+                </div>
+                <div className="user-info">
+                  <span className="username">{username || "User"}</span>
+                  <span className="user-role">{role}</span>
+                </div>
+                <button className="logout-btn" onClick={logout}>Logout</button>
+              </div>
             </li>
           )}
         </ul>
@@ -121,7 +155,7 @@ function Navbar() {
           )}
 
           {role ? (
-            <div className="user-profile">
+            <div className="user-profile desktop-only">
               <div className="user-avatar">
                 {username ? username[0].toUpperCase() : "U"}
               </div>
@@ -132,7 +166,7 @@ function Navbar() {
               <button className="logout-btn" onClick={logout}>Logout</button>
             </div>
           ) : (
-            <button className="login-btn-premium" onClick={() => navigate("/")}>
+            <button className="login-btn-premium" onClick={() => handleNavClick("/")}>
               Get Started
             </button>
           )}

@@ -192,6 +192,15 @@ function RideHistory() {
         .btn-invoice:hover { background: rgba(255,255,255,0.15); }
         .btn-rebook { background: #fbbf24; color: #1e1e2f; border: none; }
         .btn-rebook:hover { box-shadow: 0 4px 15px rgba(251,191,36,0.4); }
+
+        @media (max-width: 600px) {
+          .trip-card { padding: 15px; }
+          .trip-footer { flex-direction: column; gap: 15px; align-items: flex-start; }
+          .trip-meta { flex-wrap: wrap; gap: 10px; }
+          .trip-actions { width: 100%; }
+          .btn-invoice, .btn-rebook { flex: 1; text-align: center; }
+          .page-title { font-size: 22px; }
+        }
       `}</style>
         </div>
     );
