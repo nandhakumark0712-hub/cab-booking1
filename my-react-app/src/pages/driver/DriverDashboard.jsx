@@ -5,7 +5,7 @@ import LocationInput from "../../components/LocationInput";
 import API from "../../services/api";
 import "../../styles.css";
 
-const socket = io("http://localhost:5001");
+const socket = io("https://cab-booking1-iota.vercel.app");
 
 function DriverDashboard() {
   // --- States ---
