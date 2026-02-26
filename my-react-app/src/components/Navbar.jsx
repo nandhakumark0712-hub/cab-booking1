@@ -78,7 +78,7 @@ function Navbar() {
             <li className="dropdown">
               <span className="dropbtn">Services <span className="arrow">▿</span></span>
               <ul className="dropdown-content">
-                <li><NavLink to="/rider/dashboard" className="nav-link">Book Ride</NavLink></li>
+                <li><NavLink to="/book" className="nav-link">Book Ride</NavLink></li>
                 <li><NavLink to="/track" className="nav-link">Track Ride</NavLink></li>
                 <li><NavLink to="/history" className="nav-link">Ride History</NavLink></li>
               </ul>

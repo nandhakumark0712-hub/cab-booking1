@@ -22,6 +22,14 @@ function App() {
 
           {/* Rider-only routes */}
           <Route
+            path="/book"
+            element={
+              <ProtectedRoute allowedRole="rider">
+                <BookRide />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/rider/dashboard"
             element={
               <ProtectedRoute allowedRole="rider">
