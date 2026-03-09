@@ -31,12 +31,24 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     if (user) {
+        // If driver, create a profile in Driver collection with same ID
+        if (role === "driver") {
+            const Driver = require("../models/Driver");
+            await Driver.create({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                password: user.password // Using hashed password from User
+            });
+            console.log(`Auth: Created Driver profile for ${user.email}`);
+        }
+
         res.status(201).json({
             _id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,
-            token: generateToken(user._id),
+            token: generateToken(user._id, user.role),
         });
     } else {
         res.status(400);
@@ -71,6 +83,21 @@ const loginUser = asyncHandler(async (req, res) => {
     console.log(`Password match result for ${email}: ${isMatch}`);
 
     if (user && isMatch) {
+        // Safety check: If user is driver but no Driver profile exists, create it
+        if (user.role === "driver") {
+            const Driver = require("../models/Driver");
+            const driverExists = await Driver.findById(user._id);
+            if (!driverExists) {
+                await Driver.create({
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    password: user.password
+                });
+                console.log(`Auth: Created missing Driver profile for ${user.email} on login`);
+            }
+        }
+
         res.json({
             _id: user.id,
             name: user.name,

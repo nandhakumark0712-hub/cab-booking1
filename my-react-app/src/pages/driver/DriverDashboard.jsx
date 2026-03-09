@@ -33,6 +33,9 @@ function DriverDashboard() {
    const [location, setLocation] = useState({ lat: 13.0827, lng: 80.2707 }); // Chennai Default
    const [otpInput, setOtpInput] = useState("");
    const [reviews, setReviews] = useState([]);
+   const [showHistoryModal, setShowHistoryModal] = useState(false);
+   const [tripHistory, setTripHistory] = useState([]);
+   const [loadingHistory, setLoadingHistory] = useState(false);
 
   // ... (existing effects and actions)
 
@@ -105,6 +108,18 @@ function DriverDashboard() {
       setReviews(res.data || []);
     } catch (err) {
       console.error("Error fetching reviews:", err);
+    }
+  };
+
+  const fetchHistory = async () => {
+    try {
+      setLoadingHistory(true);
+      const res = await API.get("trip/driver-history");
+      setTripHistory(res.data || []);
+    } catch (err) {
+      console.error("Error fetching history:", err);
+    } finally {
+      setLoadingHistory(false);
     }
   };
 
@@ -300,6 +315,11 @@ function DriverDashboard() {
     setWalletBalance(0);
   };
 
+  const openHistory = () => {
+    fetchHistory();
+    setShowHistoryModal(true);
+  };
+
   return (
     <div className="driver-dashboard-wrapper">
       {/* ... (rest of the component) */}
@@ -326,7 +346,7 @@ function DriverDashboard() {
             </div>
             <div className="stat-item">
               <span className="label">Trips</span>
-              <span className="value">{totalTrips}</span>
+              <span className="value" onClick={openHistory} style={{ cursor: 'pointer', textDecoration: 'underline' }}>{totalTrips}</span>
             </div>
             <div className="status-toggle-container">
               <span className={`status-dot ${isOnline ? 'online' : 'offline'}`}></span>
@@ -425,6 +445,37 @@ function DriverDashboard() {
 
         </div>
       </div>
+
+      {/* --- History Modal --- */}
+      {showHistoryModal && (
+        <div className="modal-overlay">
+           <div className="modal-content history-modal">
+              <div className="modal-header">
+                <h2>Your Trip History</h2>
+                <button className="close-btn" onClick={() => setShowHistoryModal(false)}>✕</button>
+              </div>
+              <div className="history-list">
+                {loadingHistory ? <p>Loading...</p> : 
+                 tripHistory.length === 0 ? <p>No trips yet.</p> :
+                 tripHistory.map((t, idx) => (
+                   <div key={idx} className="h-item">
+                      <div className="h-header">
+                        <span className="h-date">{new Date(t.createdAt).toLocaleDateString()}</span>
+                        <span className={`h-status ${t.status}`}>{t.status}</span>
+                      </div>
+                      <div className="h-loc">📍 {t.pickup}</div>
+                      <div className="h-loc">🏁 {t.drop}</div>
+                      <div className="h-footer">
+                        <span>💰 ₹{t.fare}</span>
+                        <span>👤 {t.user?.name || "Rider"}</span>
+                      </div>
+                   </div>
+                 ))
+                }
+              </div>
+           </div>
+        </div>
+      )}
 
       {/* --- Incoming Request Notification --- */}
       {newRequest && (

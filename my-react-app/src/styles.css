@@ -450,3 +450,45 @@ tr:hover {
   font-size: 12px;
   margin-bottom: 15px;
 }
+
+.trip-summary-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.summary-item span {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+.summary-item strong {
+  color: #fbbf24;
+}
+
+.history-modal { max-width: 600px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+.history-list { overflow-y: auto; padding-right: 10px; flex: 1; margin-top: 15px; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.close-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+
+.h-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+.h-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); }
+.h-status { text-transform: uppercase; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+.h-status.completed { background: rgba(16,185,129,0.1); color: #10b981; }
+.h-status.accepted { background: rgba(251,191,36,0.1); color: #fbbf24; }
+.h-status.ongoing { background: rgba(59,130,246,0.1); color: #3b82f6; }
+.h-status.cancelled { background: rgba(239,68,68,0.1); color: #ef4444; }
+.h-loc { font-size: 14px; margin-bottom: 5px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.h-footer { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-weight: 800; color: #fbbf24; }
+

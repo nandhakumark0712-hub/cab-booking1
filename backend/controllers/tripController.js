@@ -94,8 +94,11 @@ const updateTripStatus = asyncHandler(async (req, res) => {
 
             const finalDriverDetails = {
                 driverName: driverData ? driverData.name : "Driver",
+                phone: driverData ? driverData.phone : "",
                 rating: driverData ? driverData.rating : 4.8,
-                vehicle: (driverData && driverData.vehicle) ? `${driverData.vehicle.make} ${driverData.vehicle.model}` : "Standard Cab"
+                vehicle: (driverData && driverData.vehicle) ? `${driverData.vehicle.make} ${driverData.vehicle.model}` : "Standard Cab",
+                plate: (driverData && driverData.vehicle) ? driverData.vehicle.plateNumber : "TN-01-AB-1234",
+                carModel: (driverData && driverData.vehicle) ? `${driverData.vehicle.color} ${driverData.vehicle.make}` : "Cab"
             };
 
             console.log(`Backend: Broadcasting rideAccepted for ${tripId} with details:`, finalDriverDetails);
@@ -146,7 +149,20 @@ const getTripById = asyncHandler(async (req, res) => {
         });
 
     if (trip) {
-        res.json(trip);
+        // Return a cleaner object if needed, or just the populated trip
+        const data = trip.toObject();
+        if (data.driver && typeof data.driver === 'object') {
+            const drv = data.driver;
+            data.driverDetails = {
+                driverName: drv.name,
+                phone: drv.phone,
+                rating: drv.rating,
+                vehicle: drv.vehicle ? `${drv.vehicle.make} ${drv.vehicle.model}` : "Cab",
+                plate: drv.vehicle ? drv.vehicle.plateNumber : "",
+                carModel: drv.vehicle ? `${drv.vehicle.color} ${drv.vehicle.make}` : "Cab"
+            };
+        }
+        res.json(data);
     } else {
         res.status(404);
         throw new Error("Trip not found");
@@ -206,10 +222,28 @@ const submitFeedback = asyncHandler(async (req, res) => {
     res.json({ message: "Feedback submitted successfully" });
 });
 
+// @desc    Get trip history for a driver
+// @route   GET /api/trip/driver-history
+// @access  Private
+const getDriverTripHistory = asyncHandler(async (req, res) => {
+    if (!req.user) {
+        res.status(401);
+        throw new Error("Not authorized");
+    }
+
+    const trips = await Trip.find({ driver: req.user._id })
+        .populate("user", "name")
+        .sort({ createdAt: -1 })
+        .limit(50);
+
+    res.json(trips);
+});
+
 module.exports = {
     bookTrip,
     updateTripStatus,
     getTripById,
     getTripHistory,
-    submitFeedback
+    submitFeedback,
+    getDriverTripHistory
 };

@@ -59,18 +59,24 @@ function TrackRide() {
           const fetchedStatus = mapStatus(res.data.status);
           setRideStatus(fetchedStatus);
           
-          if (res.data.driver && typeof res.data.driver === 'object') {
+          if (res.data.driverDetails) {
+             setDriverDetails(res.data.driverDetails);
+          } else if (res.data.driver && typeof res.data.driver === 'object') {
             const drv = res.data.driver;
             setDriverDetails({
               driverName: drv.name || "Driver",
+              phone: drv.phone || "",
               rating: drv.rating || 4.8,
               vehicle: (drv.vehicle && typeof drv.vehicle === 'object')
                 ? `${drv.vehicle.make} ${drv.vehicle.model}`
-                : "Cab"
+                : "Cab",
+              plate: (drv.vehicle && drv.vehicle.plateNumber) ? drv.vehicle.plateNumber : "TN-01-AB-1234",
+              carModel: (drv.vehicle && drv.vehicle.color) ? `${drv.vehicle.color} ${drv.vehicle.make}` : "Cab"
             });
-            if (drv.location && drv.location.lat) {
-              setDriverLocation({ lat: drv.location.lat, lng: drv.location.lng });
-            }
+          }
+
+          if (res.data.driver && res.data.driver.location && res.data.driver.location.lat) {
+             setDriverLocation({ lat: res.data.driver.location.lat, lng: res.data.driver.location.lng });
           }
         }
       } catch (err) {
@@ -263,7 +269,7 @@ function TrackRide() {
                 <span className="car-model">{driverDetails.vehicle || "White Maruti Suzuki Swift"}</span>
               </div>
               <div className="action-buttons">
-                <button className="btn-call">📞 Call Driver</button>
+                <a href={`tel:${driverDetails.phone}`} className="btn-call" style={{ textDecoration: 'none', textAlign: 'center' }}>📞 Call Driver</a>
                 <button className="btn-message">💬 Message</button>
               </div>
             </div>
@@ -285,6 +291,11 @@ function TrackRide() {
         <div className="feedback-modal-overlay">
           <div className="feedback-modal">
             <h2>Trip Completed! 🏁</h2>
+            <div className="trip-summary-box">
+               <div className="summary-item"><span>Distance:</span> <strong>{trip.distance} km</strong></div>
+               <div className="summary-item"><span>Total Fare:</span> <strong>₹{trip.fare}</strong></div>
+               <div className="summary-item"><span>Cab Type:</span> <strong>{trip.cabType?.toUpperCase()}</strong></div>
+            </div>
             <p>How was your ride with {driverDetails?.driverName || "your driver"}?</p>
 
             <div className="star-rating">
