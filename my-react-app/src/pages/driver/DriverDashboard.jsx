@@ -36,6 +36,7 @@ function DriverDashboard() {
    const [showHistoryModal, setShowHistoryModal] = useState(false);
    const [tripHistory, setTripHistory] = useState([]);
    const [loadingHistory, setLoadingHistory] = useState(false);
+   const [routeData, setRouteData] = useState([]);
 
   // ... (existing effects and actions)
 
@@ -85,11 +86,6 @@ function DriverDashboard() {
     try {
       const res = await API.get("driver/profile");
       const data = res.data;
-      setEarnings({
-         daily: data.totalEarnings || 0,
-         weekly: (data.totalEarnings || 0) * 0.9,
-         monthly: (data.totalEarnings || 0) * 3
-      });
       setRating(data.rating || 4.8);
       setTotalTrips(data.totalTrips || 0);
       setIsOnline(data.isAvailable);
@@ -115,7 +111,22 @@ function DriverDashboard() {
     try {
       setLoadingHistory(true);
       const res = await API.get("trip/driver-history");
-      setTripHistory(res.data || []);
+      const trips = res.data || [];
+      setTripHistory(trips);
+
+      // Verify explicit earnings strictly from DB trip data correctly
+      const todayStr = new Date().toLocaleDateString();
+      let daily = 0, weekly = 0, monthly = 0;
+      const now = new Date();
+      trips.forEach(t => {
+          if (t.status !== 'completed') return;
+          const tDate = new Date(t.createdAt);
+          const earned = (t.fare || 0) * 0.8;
+          if (tDate.toLocaleDateString() === todayStr) daily += earned;
+          if ((now - tDate) / (1000 * 60 * 60 * 24) <= 7) weekly += earned;
+          if ((now - tDate) / (1000 * 60 * 60 * 24) <= 30) monthly += earned;
+      });
+      setEarnings({ daily: Math.round(daily), weekly: Math.round(weekly), monthly: Math.round(monthly) });
     } catch (err) {
       console.error("Error fetching history:", err);
     } finally {
@@ -146,7 +157,29 @@ function DriverDashboard() {
     fetchProfile();
     fetchReviews();
     fetchActiveRide();
+    fetchHistory();
   }, []);
+
+  // Fetch Route Data when active ride exists and has coords
+  useEffect(() => {
+    const fetchRoute = async () => {
+      if (activeRide && activeRide.pickupCoords && activeRide.dropCoords) {
+        try {
+          const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${activeRide.pickupCoords.lng},${activeRide.pickupCoords.lat};${activeRide.dropCoords.lng},${activeRide.dropCoords.lat}?overview=full&geometries=geojson`);
+          const data = await res.json();
+          if (data.routes && data.routes.length > 0) {
+            const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+            setRouteData(coords);
+          }
+        } catch (err) { 
+          console.error("Route fetch error:", err); 
+        }
+      } else {
+        setRouteData([]);
+      }
+    };
+    fetchRoute();
+  }, [activeRide]);
 
   // Sync online status with backend
   useEffect(() => {
@@ -323,6 +356,7 @@ function DriverDashboard() {
       // Refresh Stats and Reviews from DB
       fetchProfile();
       fetchReviews();
+      fetchHistory();
     } catch (err) {
       alert("Error completing trip");
     }
@@ -381,8 +415,9 @@ function DriverDashboard() {
           <div className="driver-content-card">
             <div className="map-view-container">
               <MapComponent
-                pickup={activeRide ? activeRide.pickupCoords : location}
-                drop={(activeRide && activeRide.status === 'on_trip') ? activeRide.dropCoords : null}
+                pickup={activeRide && activeRide.pickupCoords ? activeRide.pickupCoords : location}
+                drop={activeRide && activeRide.dropCoords ? activeRide.dropCoords : null}
+                route={routeData}
               />
 
               {!isOnline && (

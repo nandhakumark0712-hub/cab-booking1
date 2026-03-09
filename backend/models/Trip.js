@@ -18,6 +18,15 @@ const tripSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    pickupCoords: {
+        lat: Number,
+        lng: Number,
+    },
+    dropCoords: {
+        lat: Number,
+        lng: Number,
+    },
+
     distance: {
         type: Number,
         required: true,

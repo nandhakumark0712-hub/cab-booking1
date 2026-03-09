@@ -25,6 +25,8 @@ const bookTrip = asyncHandler(async (req, res) => {
         user: userId,
         pickup,
         drop,
+        pickupCoords: req.body.pickupCoords,
+        dropCoords: req.body.dropCoords,
         distance,
         fare: req.body.fare || 0,
         cabType: req.body.cabType || "mini",
