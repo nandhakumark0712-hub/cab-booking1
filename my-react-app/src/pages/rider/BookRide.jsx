@@ -192,8 +192,28 @@ function BookRide() {
         .travel-mode-panel { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(30px) saturate(160%); padding: 30px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
         .panel-label { margin-bottom: 25px; font-size: 20px; font-weight: 900; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); display: inline-block; position: relative; }
         .panel-label::after { content: ""; position: absolute; bottom: -8px; left: 0; width: 50px; height: 4px; background: #fbbf24; border-radius: 2px; }
-        .vehicle-selection-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
-        .vehicle-selection-card { flex: 0 0 180px; height: 160px; padding: 20px; background: rgba(255,255,255,0.02); border: 1.5px solid rgba(255,255,255,0.05); border-radius: 18px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; text-align: center; color: white; }
+        .vehicle-selection-grid { 
+          display: grid; 
+          grid-template-columns: repeat(3, 1fr); 
+          gap: 20px; 
+          width: 100%;
+          margin: 0 auto;
+        }
+        .vehicle-selection-card { 
+          width: 100%;
+          height: 165px; 
+          padding: 22px; 
+          background: rgba(255,255,255,0.02); 
+          border: 1.5px solid rgba(255,255,255,0.05); 
+          border-radius: 18px; 
+          cursor: pointer; 
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+          display: flex; 
+          flex-direction: column; 
+          align-items: center; 
+          text-align: center; 
+          color: white; 
+        }
         .vehicle-selection-card:hover { border-color: #fbbf24; transform: translateY(-5px); background: rgba(251, 191, 36, 0.05); }
         .vehicle-selection-card.active { border-color: #fbbf24; background: #fbbf24; color: #1e1e2f; transform: scale(1.02); box-shadow: 0 12px 25px rgba(251,191,36,0.3); }
         .vehicle-icon { font-size: 32px; margin-bottom: 12px; }
