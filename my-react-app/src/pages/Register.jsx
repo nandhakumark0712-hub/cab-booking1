@@ -29,7 +29,7 @@ const Register = () => {
     }
 
     try {
-      await API.post("/auth/register", {
+      await API.post("auth/register", {
         ...formData,
         role: formData.role.toLowerCase()
       });

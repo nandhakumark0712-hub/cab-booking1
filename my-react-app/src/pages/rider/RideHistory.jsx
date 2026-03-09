@@ -17,9 +17,10 @@ function RideHistory() {
         try {
             const userData = JSON.parse(sessionStorage.getItem("user") || "{}");
             const userId = userData._id || "";
-            const url = userId ? `/trip/history?userId=${userId}` : "/trip/history";
+            const url = userId ? `trip/history?userId=${userId}` : "trip/history";
             const res = await API.get(url);
             const data = res.data;
+            console.log("Trip History Fetched:", data);
             setTrips(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error("Failed to fetch trip history:", err);
@@ -80,8 +81,9 @@ function RideHistory() {
                 ) : trips.length === 0 ? (
                     <div className="history-state-box empty">
                         <span style={{ fontSize: 48 }}>🚕</span>
-                        <p>No rides yet! Book your first ride.</p>
-                        <button className="btn-rebook" onClick={() => navigate("/book")}>Book a Ride</button>
+                        <p>No trips recorded for your account yet!</p>
+                        <small style={{ color: "rgba(255,255,255,0.3)" }}>Searching for UserID: {JSON.parse(sessionStorage.getItem("user") || "{}")._id || "None"}</small>
+                        <button className="btn-rebook" style={{ marginTop: 20 }} onClick={() => navigate("/book")}>Book your first ride</button>
                     </div>
                 ) : (
                     <div className="trips-list">

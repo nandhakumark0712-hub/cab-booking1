@@ -45,7 +45,7 @@ function TrackRide() {
 
     const syncStatus = async () => {
       try {
-        const res = await API.get(`/trip/${tripId}`);
+        const res = await API.get(`trip/${tripId}`);
         if (res.data) {
           setRideStatus(mapStatus(res.data.status));
           if (res.data.driver && typeof res.data.driver === 'object') {

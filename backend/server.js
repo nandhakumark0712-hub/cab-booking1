@@ -18,9 +18,24 @@ const app = express();
 const server = http.createServer(app);
 
 // Middleware
-// app.use(cors());
+const allowedOrigins = [
+  "https://cab-booking1-iota.vercel.app",
+  "https://cab-booking1.onrender.com",
+  "http://localhost:5173", 
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173"
+];
+
 app.use(cors({
-    origin: "https://cab-booking1-iota.vercel.app"
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Still allow for now to prevent blocking during dev
+        }
+    },
+    credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -51,7 +66,7 @@ app.use(errorHandler);
 // Socket.IO
 const io = new Server(server, {
     cors: {
-        origin: "https://cab-booking1-iota.vercel.app", // More permissive for debugging
+        origin: "*", // More permissive for debugging
         methods: ["GET", "POST"],
     },
 });

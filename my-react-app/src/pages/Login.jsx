@@ -29,7 +29,7 @@ const Login = () => {
 
     try {
       // We pass the login data and the expected role (rider, driver, admin).
-      const { data } = await API.post("/auth/login", { ...formData, role: activeTab });
+      const { data } = await API.post("auth/login", { ...formData, role: activeTab });
 
       sessionStorage.setItem("authToken", data.token);
       sessionStorage.setItem("role", data.role);

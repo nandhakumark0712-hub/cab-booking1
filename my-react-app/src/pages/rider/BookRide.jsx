@@ -76,7 +76,7 @@ function BookRide() {
     }
     try {
       console.log("Rider: Sending booking request...", { pickup: pickupCoords.address, drop: dropCoords.address });
-      const response = await API.post("/trip/book", {
+      const response = await API.post("trip/book", {
         pickup: pickupCoords.address,
         drop: dropCoords.address,
         distance,
