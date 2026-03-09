@@ -26,10 +26,20 @@ const dropIcon = new L.Icon({
 });
 
 const driverIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
-  iconSize: [35, 35],
-  iconAnchor: [17, 17],
-  popupAnchor: [0, -15],
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Taxi Emoji Icon for a more distinct "Cab" look
+const taxiIcon = new L.divIcon({
+  html: '🚕',
+  className: 'taxi-marker-icon',
+  iconSize: [30, 30],
+  iconAnchor: [15, 15]
 });
 
 // Helper component to auto-zoom/pan to markers with smooth animations
@@ -57,7 +67,7 @@ function MapComponent({ pickup, drop, route, driver }) {
     <MapContainer
       center={defaultPosition}
       zoom={13}
-      style={{ height: "100%", width: "100%", borderRadius: "var(--radius)" }}
+      style={{ height: "100%", width: "100%", borderRadius: "20px" }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -75,6 +85,17 @@ function MapComponent({ pickup, drop, route, driver }) {
         />
       )}
 
+      {/* Driver Arriving Path */}
+      {driver && pickup && driver.lat && pickup.lat && (
+        <Polyline
+          positions={[[driver.lat, driver.lng], [pickup.lat, pickup.lng]]}
+          color="#fbbf24"
+          weight={3}
+          dashArray="10, 10"
+          opacity={0.7}
+        />
+      )}
+
       {pickup && pickup.lat && (
         <Marker position={[pickup.lat, pickup.lng]} icon={pickupIcon}>
           <Popup><strong>Pickup Point</strong></Popup>
@@ -88,8 +109,8 @@ function MapComponent({ pickup, drop, route, driver }) {
       )}
 
       {driver && driver.lat && (
-        <Marker position={[driver.lat, driver.lng]} icon={driverIcon}>
-          <Popup><strong>Cab Position</strong></Popup>
+        <Marker position={[driver.lat, driver.lng]} icon={taxiIcon}>
+          <Popup><strong>Driver (Cab)</strong></Popup>
         </Marker>
       )}
     </MapContainer>
@@ -101,6 +122,14 @@ const style = document.createElement('style');
 style.innerHTML = `
   .leaflet-marker-icon {
     transition: all 1s linear;
+  }
+  .taxi-marker-icon {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease;
   }
 `;
 document.head.appendChild(style);

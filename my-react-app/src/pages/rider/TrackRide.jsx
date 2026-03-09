@@ -276,7 +276,7 @@ function TrackRide() {
       <style>{`
         .track-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 70px); padding: 20px; background: transparent; }
         .track-page-container { display: flex; width: 100%; max-width: 1100px; min-height: 620px; background: rgba(10, 10, 15, 0.6); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
-        .map-section { flex: 7; background: #1a1a1a; position: relative; min-height: 400px; }
+        .map-section { flex: 7; background: #1a1a1a; position: relative; min-height: 400px; display: block; overflow: hidden; }
         .status-sidebar { flex: 3; min-width: 320px; padding: 25px; border-left: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; color: white; }
         
         .ride-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -330,20 +330,20 @@ function TrackRide() {
         .btn-submit { width: 100%; padding: 15px; background: #fbbf24; color: #1e1e2f; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(251,191,36,0.3); }
 
         @media (max-width: 1024px) {
-          .track-page-container { flex-direction: column; height: auto; }
-          .map-section { height: 400px; order: 1; }
-          .status-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); order: 2; }
-          .track-page-wrapper { padding: 15px; }
+          .track-page-container { flex-direction: column; height: auto; min-height: 0; }
+          .map-section { height: 450px; order: 1; width: 100%; }
+          .status-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); order: 2; height: auto; }
+          .track-page-wrapper { padding: 10px; align-items: flex-start; }
         }
 
         @media (max-width: 768px) {
-          .map-section { height: 350px; }
+          .map-section { height: 400px; }
           .ride-header h3 { font-size: 16px; }
         }
 
         @media (max-width: 480px) {
           .track-page-container { border-radius: 12px; }
-          .map-section { height: 300px; }
+          .map-section { height: 350px; z-index: 5; }
           .status-sidebar { padding: 20px 15px; }
           .ride-header h3 { font-size: 14px; }
           .status-timeline { margin-bottom: 20px; }
@@ -358,7 +358,7 @@ function TrackRide() {
           .car-model { font-size: 12px; }
           .btn-call, .btn-message { padding: 8px; font-size: 11px; }
           .btn-cancel { padding: 10px; font-size: 13px; }
-          .sos-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 11px; }
+          .sos-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 11px; z-index: 10000; }
         }
       `}</style>
     </div>
