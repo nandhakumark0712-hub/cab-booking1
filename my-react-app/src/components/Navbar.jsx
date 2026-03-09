@@ -79,7 +79,7 @@ function Navbar() {
               <ul className="dropdown-content">
                 <li><NavLink to="/book" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Book Ride</NavLink></li>
                 <li><NavLink to="/track" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Track Ride</NavLink></li>
-                <li><NavLink to="/history" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Ride History</NavLink></li>
+                <li><NavLink to="/history" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Trip History</NavLink></li>
               </ul>
             </li>
           )}

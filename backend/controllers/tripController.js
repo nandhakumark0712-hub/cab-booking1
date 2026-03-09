@@ -144,18 +144,25 @@ const getTripById = asyncHandler(async (req, res) => {
 // @route   GET /api/trip/history?userId=xxx
 // @access  Private
 const getTripHistory = asyncHandler(async (req, res) => {
-    const { userId } = req.query;
+    // If we're using protect middleware, req.user will be set.
+    // We should strictly use req.user._id to ensure they only see their own trips.
+    if (!req.user) {
+        res.status(401);
+        throw new Error("User not found or not authorized");
+    }
 
-    // Build query: if userId provided, filter by user; otherwise return all completed trips
-    const query = {
-        status: { $in: ["completed", "cancelled"] },
-        ...(userId ? { user: userId } : {})
-    };
+    const userId = req.user._id;
+
+    // For the 'History' page, we typically show completed and cancelled.
+    // However, to ensure the user sees 'data' (if they only have active rides),
+    // let's fetch all statuses or at least a wider range.
+    const query = { user: userId };
 
     const trips = await Trip.find(query)
         .sort({ createdAt: -1 }) // Newest first
         .limit(50);
 
+    console.log(`Backend: Found ${trips.length} historical trips for user ${userId}`);
     res.json(trips);
 });
 

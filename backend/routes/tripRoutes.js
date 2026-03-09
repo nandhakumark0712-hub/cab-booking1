@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const { protect } = require("../middleware/authMiddleware");
 const { bookTrip, updateTripStatus, getTripById, getTripHistory } = require("../controllers/tripController");
 
-router.post("/book", bookTrip);
-router.get("/history", getTripHistory);  // Must be before /:id
-router.get("/:id", getTripById);
-router.put("/:id", updateTripStatus);
+router.post("/book", protect, bookTrip);
+router.get("/history", protect, getTripHistory);
+router.get("/:id", protect, getTripById);
+router.put("/:id", protect, updateTripStatus);
 
 module.exports = router;
