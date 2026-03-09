@@ -28,6 +28,22 @@ function BookRide() {
 
   const navigate = useNavigate();
 
+  // Check for active trip on load
+  useEffect(() => {
+    const checkActive = async () => {
+      try {
+        const res = await API.get("trip/active");
+        if (res.data && res.data.status !== 'completed' && res.data.status !== 'cancelled') {
+          console.log("Rider: Active trip found, redirecting to track page...");
+          navigate("/track", { state: { trip: res.data } });
+        }
+      } catch (err) {
+        console.error("Error checking active trip:", err);
+      }
+    };
+    checkActive();
+  }, [navigate]);
+
   const handleSOS = () => {
     alert("⚠️ EMERGENCY SOS SENT! Authorities notified.");
   };

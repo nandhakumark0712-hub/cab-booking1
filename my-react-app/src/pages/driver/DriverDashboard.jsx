@@ -123,10 +123,29 @@ function DriverDashboard() {
     }
   };
 
+  const fetchActiveRide = async () => {
+    try {
+      const res = await API.get("trip/active");
+      if (res.data) {
+        console.log("Driver: Found active ride on load:", res.data);
+        const trip = res.data;
+        setActiveRide({
+          ...trip,
+          customer: trip.user?.name || "Rider",
+          id: trip._id
+        });
+        socket.emit("joinTrip", trip._id);
+      }
+    } catch (err) {
+      console.error("Error fetching active ride:", err);
+    }
+  };
+
   // Fetch real driver profile/stats on load
   useEffect(() => {
     fetchProfile();
     fetchReviews();
+    fetchActiveRide();
   }, []);
 
   // Sync online status with backend

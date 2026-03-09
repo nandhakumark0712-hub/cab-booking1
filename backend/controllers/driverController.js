@@ -50,21 +50,34 @@ const getDrivers = asyncHandler(async (req, res) => {
 // @route   GET /api/driver/profile
 // @access  Private
 const getDriverProfile = asyncHandler(async (req, res) => {
-    // If we're using protect middleware, req.user will be set.
     if (!req.user) {
         res.status(401);
         throw new Error("Not authorized, no user found");
     }
 
-    const driver = await Driver.findById(req.user._id)
+    let driver = await Driver.findById(req.user._id)
         .select("-password")
         .populate("vehicle");
+
+    // Safety: If user is a driver but No profile exists, create it now
+    if (!driver && req.user.role === "driver") {
+        console.log(`Driver: Creating missing profile for ${req.user.email} on profile fetch`);
+        driver = await Driver.create({
+            _id: req.user._id,
+            name: req.user.name,
+            email: req.user.email,
+            password: req.user.password, // hashed
+            phone: req.user.phone || ""
+        });
+        // Refetch to get clean object
+        driver = await Driver.findById(req.user._id).select("-password").populate("vehicle");
+    }
 
     if (driver) {
         res.json(driver);
     } else {
         res.status(404);
-        throw new Error("Driver profile not found");
+        throw new Error("Driver profile not found. Are you logged in as a driver?");
     }
 });
 

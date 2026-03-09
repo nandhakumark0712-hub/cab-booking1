@@ -38,19 +38,43 @@ function TrackRide() {
     }
   };
 
+  const [activeTrip, setActiveTrip] = useState(trip);
   const [rideStatus, setRideStatus] = useState(trip ? mapStatus(trip.status) : "searching");
   const [driverLocation, setDriverLocation] = useState(null);
   const [driverDetails, setDriverDetails] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(!trip);
 
   const navigate = useNavigate();
 
+  // Try to find active trip if we arrived here without state
+  useEffect(() => {
+    if (!activeTrip) {
+      const fetchActive = async () => {
+        try {
+          const res = await API.get("trip/active");
+          if (res.data) {
+            setActiveTrip(res.data);
+            setRideStatus(mapStatus(res.data.status));
+          }
+        } catch (err) {
+          console.error("Error fetching active trip:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchActive();
+    } else {
+      setLoading(false);
+    }
+  }, [activeTrip]);
+
   // Polling / Initial Sync for status
   useEffect(() => {
-    if (!trip) return;
-    const tripId = trip._id || trip.id;
+    if (!activeTrip) return;
+    const tripId = activeTrip._id || activeTrip.id;
 
     const syncStatus = async () => {
       try {
@@ -84,7 +108,7 @@ function TrackRide() {
       }
     };
     syncStatus();
-  }, [trip]);
+  }, [activeTrip]);
 
   useEffect(() => {
     socket.on("connect", () => console.log("Rider: Connected to socket server!", socket.id));
@@ -96,9 +120,9 @@ function TrackRide() {
   }, []);
 
   useEffect(() => {
-    if (!trip) return;
+    if (!activeTrip) return;
 
-    const tripId = trip._id || trip.id;
+    const tripId = activeTrip._id || activeTrip.id;
     console.log("Rider: Joining trip room:", tripId);
     socket.emit("joinTrip", tripId);
 
@@ -144,10 +168,10 @@ function TrackRide() {
       socket.off(`rideCompleted_${tripId}`, handleCompleted);
       socket.off(`rideCancelled_${tripId}`, handleCancelled);
     };
-  }, [trip, navigate]);
+  }, [activeTrip, navigate]);
 
   const cancelRide = async () => {
-    const tripId = trip._id || trip.id;
+    const tripId = activeTrip._id || activeTrip.id;
     if (window.confirm("Are you sure you want to cancel this ride?")) {
       try {
         await API.put(`/trip/${tripId}`, { status: "cancelled" });
@@ -171,7 +195,7 @@ function TrackRide() {
 
   const submitFeedback = async () => {
     if (rating === 0) return alert("Please select a star rating");
-    const tripId = trip._id || trip.id;
+    const tripId = activeTrip._id || activeTrip.id;
     try {
       await API.post(`trip/${tripId}/feedback`, { rating, review: feedback });
       alert("Thank you for your feedback!");
@@ -183,12 +207,24 @@ function TrackRide() {
     }
   };
 
-  if (!trip) {
+  if (loading) {
     return (
       <div className="track-page-wrapper">
         <div className="track-page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <h2>No active trip found.</h2>
-          <button onClick={() => navigate("/book")}>Book a Ride</button>
+          <h2>Locating your trip...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (!activeTrip) {
+    return (
+      <div className="track-page-wrapper">
+        <div className="track-page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <h2>No active trip found.</h2>
+            <button className="btn-primary" style={{ marginTop: '20px' }} onClick={() => navigate("/book")}>Book a Ride</button>
+          </div>
         </div>
       </div>
     );
@@ -213,20 +249,20 @@ function TrackRide() {
                  rideStatus === "on_trip" ? "Live: En route to destination" : "You have arrived!"}
           </div>
         </div>
-
+ 
         {/* Status Sidebar */}
         <div className="status-sidebar">
           <div className="ride-header">
             <h3>Live Ride Tracking</h3>
             <span className={`status-badge ${rideStatus}`}>{rideStatus.replace('_', ' ')}</span>
           </div>
-
+ 
           {/* OTP Section - Show only when driver is arriving or accepted */}
-          {(trip.otp && (rideStatus === "searching" || rideStatus === "arriving")) && (
+          {(activeTrip.otp && (rideStatus === "searching" || rideStatus === "arriving")) && (
             <div className="otp-display-card">
               <span className="otp-label">SHARE OTP WITH DRIVER</span>
               <div className="otp-value-wrapper">
-                 {trip.otp.split('').map((digit, i) => (
+                 {activeTrip.otp.split('').map((digit, i) => (
                    <span key={i} className="otp-digit">{digit}</span>
                  ))}
               </div>
@@ -292,9 +328,9 @@ function TrackRide() {
           <div className="feedback-modal">
             <h2>Trip Completed! 🏁</h2>
             <div className="trip-summary-box">
-               <div className="summary-item"><span>Distance:</span> <strong>{trip.distance} km</strong></div>
-               <div className="summary-item"><span>Total Fare:</span> <strong>₹{trip.fare}</strong></div>
-               <div className="summary-item"><span>Cab Type:</span> <strong>{trip.cabType?.toUpperCase()}</strong></div>
+               <div className="summary-item"><span>Distance:</span> <strong>{activeTrip.distance} km</strong></div>
+               <div className="summary-item"><span>Total Fare:</span> <strong>₹{activeTrip.fare}</strong></div>
+               <div className="summary-item"><span>Cab Type:</span> <strong>{activeTrip.cabType?.toUpperCase()}</strong></div>
             </div>
             <p>How was your ride with {driverDetails?.driverName || "your driver"}?</p>
 

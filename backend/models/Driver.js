@@ -13,7 +13,6 @@ const driverSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Please add a password"],
     },
     phone: {
         type: String,

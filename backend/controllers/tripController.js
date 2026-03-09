@@ -239,11 +239,57 @@ const getDriverTripHistory = asyncHandler(async (req, res) => {
     res.json(trips);
 });
 
+// @desc    Get active trip for current user/driver
+// @route   GET /api/trip/active
+// @access  Private
+const getActiveTrip = asyncHandler(async (req, res) => {
+    if (!req.user) {
+        res.status(401);
+        throw new Error("Not authorized");
+    }
+
+    const userId = req.user._id;
+    const role = req.user.role;
+
+    let query = {};
+    if (role === 'driver') {
+        query = { driver: userId, status: { $in: ['accepted', 'ongoing'] } };
+    } else {
+        query = { user: userId, status: { $in: ['pending', 'accepted', 'ongoing'] } };
+    }
+
+    const trip = await Trip.findOne(query)
+        .populate({
+            path: "driver",
+            populate: { path: "vehicle" }
+        })
+        .sort({ createdAt: -1 });
+
+    if (trip) {
+        const data = trip.toObject();
+        if (data.driver && typeof data.driver === 'object') {
+            const drv = data.driver;
+            data.driverDetails = {
+                driverName: drv.name,
+                phone: drv.phone,
+                rating: drv.rating,
+                vehicle: drv.vehicle ? `${drv.vehicle.make} ${drv.vehicle.model}` : "Cab",
+                plate: drv.vehicle ? drv.vehicle.plateNumber : "",
+                carModel: drv.vehicle ? `${drv.vehicle.color} ${drv.vehicle.make}` : "Cab"
+            };
+        }
+        res.json(data);
+    } else {
+        res.json(null);
+    }
+});
+
 module.exports = {
     bookTrip,
     updateTripStatus,
     getTripById,
     getTripHistory,
     submitFeedback,
-    getDriverTripHistory
+    getDriverTripHistory,
+    getActiveTrip
 };
