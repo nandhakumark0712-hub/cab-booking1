@@ -50,11 +50,11 @@ function TrackRide() {
           setRideStatus(mapStatus(res.data.status));
           if (res.data.driver && typeof res.data.driver === 'object') {
             setDriverDetails({
-              driverName: res.data.driver.name || "Rajesh Kumar",
+              driverName: res.data.driver.name || "Driver",
               rating: res.data.driver.rating || 4.8,
               vehicle: (res.data.driver.vehicle && typeof res.data.driver.vehicle === 'object')
-                ? res.data.driver.vehicle.model
-                : (typeof res.data.driver.vehicle === 'string' ? res.data.driver.vehicle : "White Maruti Suzuki Swift")
+                ? `${res.data.driver.vehicle.make} ${res.data.driver.vehicle.model}`
+                : "Cab"
             });
           }
         }

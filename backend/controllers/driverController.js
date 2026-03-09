@@ -50,21 +50,21 @@ const getDrivers = asyncHandler(async (req, res) => {
 // @route   GET /api/driver/profile
 // @access  Private
 const getDriverProfile = asyncHandler(async (req, res) => {
-    // For now, use a hardcoded ID if auth is not fully injected, 
-    // but try to get it from req.user if available.
-    const driverId = req.user ? req.user._id : req.query.id;
-
-    if (!driverId) {
-        res.status(400);
-        throw new Error("Driver ID required");
+    // If we're using protect middleware, req.user will be set.
+    if (!req.user) {
+        res.status(401);
+        throw new Error("Not authorized, no user found");
     }
 
-    const driver = await Driver.findById(driverId).populate("vehicle");
+    const driver = await Driver.findById(req.user._id)
+        .select("-password")
+        .populate("vehicle");
+
     if (driver) {
         res.json(driver);
     } else {
         res.status(404);
-        throw new Error("Driver not found");
+        throw new Error("Driver profile not found");
     }
 });
 

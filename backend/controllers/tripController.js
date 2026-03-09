@@ -85,15 +85,17 @@ const updateTripStatus = asyncHandler(async (req, res) => {
     if (io) {
         const tripId = trip._id.toString();
         if (status === "accepted") {
-            // Populate driver to send details to customer
-            const populatedTrip = await Trip.findById(trip._id).populate("driver");
+            // Populate driver to send details to customer, including vehicle
+            const populatedTrip = await Trip.findById(trip._id).populate({
+                path: "driver",
+                populate: { path: "vehicle" }
+            });
             const driverData = populatedTrip.driver;
 
-            // Fallback for demo users if no real driver exists in DB
             const finalDriverDetails = {
-                driverName: driverData ? driverData.name : "Rajesh Kumar",
+                driverName: driverData ? driverData.name : "Driver",
                 rating: driverData ? driverData.rating : 4.8,
-                vehicle: driverData ? (driverData.vehicle ? driverData.vehicle.model : "White Maruti Suzuki Swift") : "White Maruti Suzuki Swift"
+                vehicle: (driverData && driverData.vehicle) ? `${driverData.vehicle.make} ${driverData.vehicle.model}` : "Standard Cab"
             };
 
             console.log(`Backend: Broadcasting rideAccepted for ${tripId} with details:`, finalDriverDetails);
@@ -122,18 +124,14 @@ const updateTripStatus = asyncHandler(async (req, res) => {
 // @route   GET /api/trip/:id
 // @access  Private
 const getTripById = asyncHandler(async (req, res) => {
-    const trip = await Trip.findById(req.params.id).populate("driver");
+    const trip = await Trip.findById(req.params.id)
+        .populate({
+            path: "driver",
+            populate: { path: "vehicle" }
+        });
+
     if (trip) {
-        // Inject mock driver if trip is accepted but driver record not found in DB
-        const tripObj = trip.toObject();
-        if ((trip.status === "accepted" || trip.status === "ongoing") && !trip.driver) {
-            tripObj.driver = {
-                name: "Rajesh Kumar",
-                rating: 4.8,
-                vehicle: { model: "White Maruti Suzuki Swift" }
-            };
-        }
-        res.json(tripObj);
+        res.json(trip);
     } else {
         res.status(404);
         throw new Error("Trip not found");

@@ -39,6 +39,10 @@ const driverSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    walletBalance: {
+        type: Number,
+        default: 0,
+    },
     status: {
         type: String,
         enum: ["pending", "approved", "suspended"],

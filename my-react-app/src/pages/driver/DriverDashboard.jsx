@@ -72,12 +72,20 @@ function DriverDashboard() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userId = JSON.parse(sessionStorage.getItem("user") || "{}")._id || "653b8f8d6f8d8d2a6c8e8e8e"; // Use real ID if possible
-        const res = await API.get(`/driver/profile?id=${userId}`);
-        setEarnings({ daily: res.data.totalEarnings || 0, weekly: res.data.totalEarnings * 0.9, monthly: res.data.totalEarnings * 3 }); // Mock weekly/monthly based on daily for now
-        setRating(res.data.rating || 4.8);
-        setTotalTrips(res.data.totalTrips || 0);
-        setIsOnline(res.data.isAvailable);
+        const res = await API.get("driver/profile");
+        const data = res.data;
+        setEarnings({
+           daily: data.totalEarnings || 0,
+           weekly: (data.totalEarnings || 0) * 0.9,
+           monthly: (data.totalEarnings || 0) * 3
+        });
+        setRating(data.rating || 4.8);
+        setTotalTrips(data.totalTrips || 0);
+        setIsOnline(data.isAvailable);
+        setWalletBalance(data.walletBalance || 0);
+        
+        // Save full driver info for reuse
+        sessionStorage.setItem("driverInfo", JSON.stringify(data));
       } catch (err) {
         console.error("Error fetching driver profile:", err);
       }
@@ -89,8 +97,7 @@ function DriverDashboard() {
   useEffect(() => {
     const toggleAvailability = async () => {
       try {
-        const userId = JSON.parse(sessionStorage.getItem("user") || "{}")._id || "653b8f8d6f8d8d2a6c8e8e8e";
-        await API.put("/driver/availability", { id: userId, isAvailable: isOnline });
+        await API.put("driver/availability", { isAvailable: isOnline });
 
         // Also manage socket room membership based on online status
         if (isOnline) {
@@ -180,7 +187,10 @@ function DriverDashboard() {
   const acceptRide = async () => {
     try {
       const tripId = newRequest._id || newRequest.id;
-      await API.put(`/trip/${tripId}`, { status: "accepted", driverId: JSON.parse(sessionStorage.getItem("user") || "{}")._id || "DRV-001" });
+      const driverInfo = JSON.parse(sessionStorage.getItem("driverInfo") || "{}");
+      const driverId = driverInfo._id || "DRV-DB";
+
+      await API.put(`trip/${tripId}`, { status: "accepted", driverId });
 
       // Teleport near pickup for demo purposes
       if (newRequest.pickupCoords) {
@@ -190,7 +200,17 @@ function DriverDashboard() {
         });
       }
 
-      const rideData = { ...newRequest, status: "arriving", driverId: "DRV-001", driverName: "Rajesh Kumar" };
+      const rideData = {
+         ...newRequest,
+         status: "arriving",
+         driverId,
+         driverName: driverInfo.name || "Driver",
+         driverRating: driverInfo.rating || 4.8,
+         vehicle: (driverInfo.vehicle && typeof driverInfo.vehicle === 'object') 
+           ? `${driverInfo.vehicle.make} ${driverInfo.vehicle.model}` 
+           : "Cab"
+      };
+
       setActiveRide(rideData);
       socket.emit("joinTrip", tripId);
       setNewRequest(null);
