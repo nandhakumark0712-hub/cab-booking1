@@ -19,6 +19,7 @@ const bookTrip = asyncHandler(async (req, res) => {
 
     // For simplicity if auth not fully set up yet:
     const userId = req.user ? req.user._id : null;
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
     const trip = await Trip.create({
         user: userId,
@@ -28,6 +29,7 @@ const bookTrip = asyncHandler(async (req, res) => {
         fare: req.body.fare || 0,
         cabType: req.body.cabType || "mini",
         status: "pending",
+        otp: otp
     });
 
     // Notify drivers about the new ride request
@@ -64,6 +66,14 @@ const updateTripStatus = asyncHandler(async (req, res) => {
     if (!trip) {
         res.status(404);
         throw new Error("Trip not found");
+    }
+
+    if (status === "ongoing") {
+        const { otpProvided } = req.body;
+        if (trip.otp !== otpProvided) {
+            res.status(400);
+            throw new Error("Invalid OTP. Cannot start trip.");
+        }
     }
 
     trip.status = status;

@@ -193,6 +193,19 @@ function TrackRide() {
             <span className={`status-badge ${rideStatus}`}>{rideStatus.replace('_', ' ')}</span>
           </div>
 
+          {/* OTP Section - Show only when driver is arriving or accepted */}
+          {(trip.otp && (rideStatus === "searching" || rideStatus === "arriving")) && (
+            <div className="otp-display-card">
+              <span className="otp-label">SHARE OTP WITH DRIVER</span>
+              <div className="otp-value-wrapper">
+                 {trip.otp.split('').map((digit, i) => (
+                   <span key={i} className="otp-digit">{digit}</span>
+                 ))}
+              </div>
+              <p className="otp-hint">Only share this once your driver has arrived at the pickup location.</p>
+            </div>
+          )}
+
           {/* Progress Timeline */}
           <div className="status-timeline">
             {STATUS_STEPS.map((step, index) => {
@@ -281,6 +294,12 @@ function TrackRide() {
         
         .ride-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .ride-header h3 { font-size: 18px; font-weight: 800; color: #fbbf24; }
+        .otp-display-card { background: rgba(251, 191, 36, 0.1); border: 1.5px dashed #fbbf24; border-radius: 16px; padding: 20px; margin-bottom: 25px; text-align: center; }
+        .otp-label { display: block; font-size: 10px; font-weight: 800; color: #fbbf24; letter-spacing: 1.5px; margin-bottom: 12px; }
+        .otp-value-wrapper { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+        .otp-digit { background: #fbbf24; color: #1e1e2f; width: 40px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 24px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .otp-hint { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.4; padding: 0 10px; }
+        
         .status-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.08); color: white; }
         .status-badge.arriving { background: #dcfce7; color: #166534; }
         .status-badge.on_trip { background: #dbeafe; color: #1e40af; }

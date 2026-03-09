@@ -99,7 +99,9 @@ function RideHistory() {
                                             </div>
                                             <div className="right-badges">
                                                 <span className={`status-pill ${trip.status}`}>
-                                                    {isCompleted ? "✓ Completed" : "✗ Cancelled"}
+                                                    {trip.status === "completed" ? "✓ Completed" : 
+                                                     trip.status === "cancelled" ? "✗ Cancelled" : 
+                                                     trip.status.toUpperCase()}
                                                 </span>
                                                 <span className="trip-id">#{shortId}</span>
                                             </div>
@@ -159,7 +161,7 @@ function RideHistory() {
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .trips-list { display: flex; flex-direction: column; gap: 20px; }
-        .trip-card { background: rgba(15, 15, 25, 0.7); backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: all 0.3s ease; color: white; }
+        .trip-card { background: rgba(10, 10, 18, 0.95); backdrop-filter: blur(30px) saturate(200%); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); transition: all 0.3s ease; color: white; }
         .trip-card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-color: rgba(251,191,36,0.3); }
 
         .trip-date-id { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -180,11 +182,11 @@ function RideHistory() {
         .addr { font-size: 15px; font-weight: 600; color: rgba(255,255,255,1); line-height: 1.5; word-break: break-word; }
         .route-path { position: absolute; left: 4px; top: 18px; bottom: 18px; width: 0; border-left: 2px dashed rgba(255,255,255,0.1); }
 
-        .trip-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .trip-meta { display: flex; gap: 24px; align-items: center; }
-        .cab-type { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 6px; }
-        .dist { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500; }
-        .fare { font-size: 24px; font-weight: 950; color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,0.3); }
+        .trip-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .trip-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; flex: 1; }
+        .cab-type { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px; }
+        .dist { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
+        .fare { font-size: 26px; font-weight: 950; color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.4); margin-left: 15px; }
 
         .trip-actions { display: flex; gap: 12px; }
         .btn-invoice, .btn-rebook { padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -214,10 +216,10 @@ function RideHistory() {
           .trip-route { padding-left: 22px; }
           .addr { font-size: 14px; }
           .trip-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
-          .trip-meta { flex-direction: column; gap: 8px; align-items: flex-start; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-          .fare { font-size: 22px; align-self: flex-end; margin-top: -35px; }
+          .trip-meta { gap: 10px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
+          .fare { font-size: 24px; align-self: flex-end; margin-top: 0; margin-left: 0; }
           .trip-actions { width: 100%; display: flex; gap: 12px; }
-          .btn-invoice, .btn-rebook { flex: 1; text-align: center; padding: 12px; }
+          .btn-invoice, .btn-rebook { flex: 1; text-align: center; padding: 12px; border-radius: 12px; }
           .spinner { width: 30px; height: 30px; }
         }
       `}</style>

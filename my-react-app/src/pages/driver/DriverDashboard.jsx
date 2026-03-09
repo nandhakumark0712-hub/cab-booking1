@@ -22,6 +22,7 @@ function DriverDashboard() {
   const [totalTrips, setTotalTrips] = useState(0);
 
   const [location, setLocation] = useState({ lat: 13.0827, lng: 80.2707 }); // Chennai Default
+  const [otpInput, setOtpInput] = useState("");
 
   // ... (existing effects and actions)
 
@@ -213,12 +214,20 @@ function DriverDashboard() {
   };
 
   const startTrip = async () => {
+    if (!otpInput || otpInput.length < 4) {
+      alert("Please enter a valid 4-digit OTP to start the trip.");
+      return;
+    }
     try {
       const tripId = activeRide._id || activeRide.id;
-      await API.put(`/trip/${tripId}`, { status: "ongoing" });
+      await API.put(`/trip/${tripId}`, { 
+        status: "ongoing",
+        otpProvided: otpInput
+      });
       setActiveRide(prev => ({ ...prev, status: "on_trip" }));
+      setOtpInput("");
     } catch (err) {
-      alert("Error starting trip");
+      alert(err.response?.data?.message || "Error starting trip. Checks if OTP is correct.");
     }
   };
 
@@ -287,7 +296,7 @@ function DriverDashboard() {
             <div className="map-view-container">
               <MapComponent
                 pickup={activeRide ? activeRide.pickupCoords : location}
-                drop={activeRide ? activeRide.dropCoords : null}
+                drop={(activeRide && activeRide.status === 'on_trip') ? activeRide.dropCoords : null}
               />
 
               {!isOnline && (
@@ -310,15 +319,28 @@ function DriverDashboard() {
                   </div>
                   <div className="trip-status-badge">{activeRide.status.replace('_', ' ')}</div>
                 </div>
-                <div className="trip-actions">
-                  <button className="btn-call">📞 Call</button>
-                  {activeRide.status === 'arriving' ? (
-                    <button className="btn-primary" onClick={startTrip}>Start Trip</button>
-                  ) : (
-                    <button className="btn-success" onClick={completeTrip}>End Trip</button>
-                  )}
-                  <button className="btn-reject" style={{ flex: 1 }} onClick={cancelRide}>Cancel</button>
-                </div>
+                  <div className="trip-actions">
+                    {activeRide.status === 'arriving' && (
+                       <div className="otp-input-area">
+                          <input 
+                            type="text" 
+                            maxLength="4" 
+                            placeholder="Enter 4-Digit OTP" 
+                            value={otpInput}
+                            onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ""))}
+                          />
+                       </div>
+                    )}
+                    <div className="action-row" style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                      <button className="btn-call">📞 Call</button>
+                      {activeRide.status === 'arriving' ? (
+                        <button className="btn-primary" onClick={startTrip} style={{ flex: 2 }}>Verify OTP & Start</button>
+                      ) : (
+                        <button className="btn-success" onClick={completeTrip} style={{ flex: 2 }}>End Trip</button>
+                      )}
+                      <button className="btn-reject" style={{ flex: 1 }} onClick={cancelRide}>Cancel</button>
+                    </div>
+                  </div>
               </div>
             )}
 
@@ -446,13 +468,14 @@ function DriverDashboard() {
         .customer-info .avatar { font-size: 24px; background: rgba(255,255,255,0.08); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
         .customer-info strong { display: block; font-size: 16px; color: white; }
         .customer-info small { color: rgba(255,255,255,0.5); display: block; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .trip-status-badge { background: #1e1e2f; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .trip-actions { display: flex; gap: 12px; }
-        .trip-actions button { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .btn-call { background: rgba(255,255,255,0.1); color: white; }
-        .btn-primary { background: #1e1e2f; color: white; }
-        .btn-success { background: #10b981; color: white; }
         .btn-reject { background: #ef4444; color: white; }
+        
+        .otp-input-area { margin-bottom: 20px; width: 100%; }
+        .otp-input-area input { width: 100%; padding: 15px; background: rgba(251, 191, 36, 0.1); border: 2px dashed #fbbf24; border-radius: 12px; color: #fbbf24; font-size: 18px; font-weight: 800; text-align: center; letter-spacing: 5px; outline: none; }
+        .otp-input-area input::placeholder { color: rgba(251, 191, 36, 0.5); letter-spacing: normal; font-size: 14px; font-weight: 600; }
+        .otp-input-area input:focus { background: rgba(251, 191, 36, 0.15); box-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
+
+        .trip-actions .action-row button { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; }
 
         /* Sidebar Cards */
         .wallet-card, .earnings-history, .ratings-card, .manual-location-card { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(25px) saturate(180%); padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; }

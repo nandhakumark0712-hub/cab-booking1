@@ -42,6 +42,10 @@ const tripSchema = new mongoose.Schema({
         lat: Number,
         lng: Number,
     },
+    otp: {
+        type: String,
+        required: false,
+    },
     cancellationReason: {
         type: String,
     },
