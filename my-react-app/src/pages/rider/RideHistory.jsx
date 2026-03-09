@@ -193,13 +193,30 @@ function RideHistory() {
         .btn-rebook { background: #fbbf24; color: #1e1e2f; border: none; }
         .btn-rebook:hover { box-shadow: 0 4px 15px rgba(251,191,36,0.4); }
 
-        @media (max-width: 600px) {
+        @media (max-width: 1024px) {
+          .history-container { padding: 0 20px; }
+        }
+
+        @media (max-width: 768px) {
+          .history-page-wrapper { padding: 30px 15px; }
+          .page-title { font-size: 24px; }
+          .trip-card { padding: 20px; }
+          .trip-meta { gap: 12px; font-size: 12px; }
+          .fare { font-size: 18px; }
+        }
+
+        @media (max-width: 480px) {
+          .history-header { flex-direction: column; align-items: flex-start; gap: 15px; }
           .trip-card { padding: 15px; }
+          .trip-date-id { flex-direction: column; gap: 10px; }
+          .right-badges { align-self: flex-start; }
           .trip-footer { flex-direction: column; gap: 15px; align-items: flex-start; }
-          .trip-meta { flex-wrap: wrap; gap: 10px; }
-          .trip-actions { width: 100%; }
-          .btn-invoice, .btn-rebook { flex: 1; text-align: center; }
+          .trip-meta { flex-wrap: wrap; gap: 10px; justify-content: space-between; width: 100%; }
+          .trip-actions { width: 100%; display: flex; gap: 10px; }
+          .btn-invoice, .btn-rebook { flex: 1; text-align: center; padding: 10px; }
           .page-title { font-size: 22px; }
+          .addr { font-size: 13px; }
+          .spinner { width: 28px; height: 28px; }
         }
       `}</style>
         </div>

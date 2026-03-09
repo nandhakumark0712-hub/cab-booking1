@@ -228,15 +228,35 @@ function BookRide() {
         .sos-action-btn { position: fixed; bottom: 30px; right: 30px; z-index: 3000; width: 60px; height: 60px; background: #ef4444; color: white; border: none; border-radius: 50%; font-weight: 900; cursor: pointer; box-shadow: 0 8px 25px rgba(239,68,68,0.4); transition: 0.3s; }
         .sos-action-btn:hover { transform: scale(1.1) rotate(5deg); }
 
-        @media (max-width: 1110px) {
+        @media (max-width: 1024px) {
           .layout-grid { flex-direction: column; height: auto; }
-          .sidebar-action-area { min-width: 100%; order: 2; }
+          .sidebar-action-area { min-width: 100%; order: 2; margin-top: 20px; }
           .main-content-area { height: auto; min-height: 400px; order: 1; }
           .dashboard-map-wrapper { min-height: 350px; }
-          .travel-mode-panel { padding: 20px; }
-          .vehicle-selection-grid { justify-content: flex-start; }
-          .executive-card { padding: 25px; }
+        }
+
+        @media (max-width: 768px) {
           .formal-booking-page { padding: 15px; }
+          .panel-label { font-size: 18px; }
+          .vehicle-selection-card { flex: 0 0 160px; height: 140px; }
+          .brand-h2 { font-size: 20px; }
+          .confirm-booking-full-btn { padding: 15px; font-size: 15px; }
+        }
+
+        @media (max-width: 480px) {
+          .formal-booking-page { padding: 10px; }
+          .dashboard-map-wrapper { min-height: 300px; }
+          .travel-mode-panel { padding: 20px 15px; }
+          .panel-label { font-size: 16px; margin-bottom: 15px; }
+          .vehicle-selection-grid { gap: 12px; }
+          .vehicle-selection-card { flex: 0 0 140px; height: 130px; padding: 15px; }
+          .vehicle-icon { font-size: 28px; }
+          .vehicle-info .name { font-size: 14px; }
+          .vehicle-info .desc { font-size: 11px; }
+          .executive-card { padding: 20px 15px; }
+          .booking-type-selector button { padding: 10px; font-size: 13px; }
+          .confirm-booking-full-btn { border-radius: 12px; }
+          .sos-action-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 12px; }
         }
       `}</style>
     </div>

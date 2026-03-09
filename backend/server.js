@@ -51,7 +51,7 @@ app.use(errorHandler);
 // Socket.IO
 const io = new Server(server, {
     cors: {
-        origin: "*", // More permissive for debugging
+        origin: "https://cab-booking1-iota.vercel.app", // More permissive for debugging
         methods: ["GET", "POST"],
     },
 });

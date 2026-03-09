@@ -241,9 +241,87 @@ html {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 480px) {
-  .auth-card {
-    width: 90%;
-    padding: 25px;
+@media (max-width: 1024px) {
+  .about-title {
+    font-size: 36px;
+  }
+  .about-subtitle {
+    font-size: 20px;
   }
 }
+
+@media (max-width: 768px) {
+  .auth-container {
+    height: auto;
+    padding: 40px 20px;
+    min-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+  
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px 20px;
+  }
+
+  .about-section {
+    padding: 60px 20px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .about-footer-card {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 25px 15px;
+    border-radius: 16px;
+  }
+
+  .auth-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px;
+  }
+
+  .auth-tab {
+    padding: 8px 4px;
+    font-size: 11px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .auth-card h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .auth-logo-container svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .auth-input, .auth-button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .about-title {
+    font-size: 26px;
+  }
+
+  .about-subtitle {
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  .about-item {
+    padding: 25px 20px;
+  }
+}

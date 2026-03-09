@@ -527,19 +527,39 @@ function DriverDashboard() {
         .btn-text { background: none; border: none; color: #888; font-weight: 700; cursor: pointer; }
 
         @media (max-width: 1024px) {
+          .driver-layout { flex-direction: column; }
+          .driver-sidebar { min-width: 100%; order: 2; margin-top: 25px; }
+          .driver-main { order: 1; }
           .map-view-container { height: 400px; }
-          .balance { font-size: 28px; }
+          .driver-stats-strip { gap: 20px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         }
 
         @media (max-width: 768px) {
-          .dashboard-grid { grid-template-columns: 1fr; }
+          .driver-dashboard-wrapper { padding: 15px; }
+          .driver-stats-strip { padding: 15px 20px; gap: 15px; }
+          .stat-item .value { font-size: 18px; }
           .map-view-container { height: 350px; }
           .active-trip-panel { padding: 15px; }
           .customer-info small { max-width: 180px; }
           .request-card { padding: 25px; }
           .request-header h2 { font-size: 20px; }
           .btn-accept, .btn-reject { padding: 14px; font-size: 14px; }
-          .modal-content { padding: 20px; margin: 10px; }
+          .modal-content { padding: 25px; margin: 15px; }
+        }
+
+        @media (max-width: 480px) {
+          .driver-dashboard-wrapper { padding: 10px; }
+          .kyc-banner { flex-direction: column; gap: 10px; text-align: center; }
+          .stat-item .label { font-size: 9px; }
+          .stat-item .value { font-size: 16px; }
+          .status-text { font-size: 11px; }
+          .trip-actions { flex-direction: column; gap: 8px; }
+          .btn-call, .btn-primary, .btn-success, .btn-reject { width: 100%; padding: 12px; }
+          .balance { font-size: 28px; }
+          .request-card h2 { font-size: 18px; }
+          .request-details { font-size: 13px; }
+          .req-loc { font-size: 13px; }
+          .req-meta { gap: 12px; font-size: 13px; }
         }
       `}</style>
     </div>

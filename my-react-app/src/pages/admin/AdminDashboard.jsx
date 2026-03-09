@@ -442,7 +442,7 @@ const AdminDashboard = () => {
 
         @media (max-width: 768px) {
           .admin-layout { flex-direction: column; height: auto; }
-          .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px; }
+          .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px; height: auto; position: sticky; top: 0; z-index: 2000; }
           .admin-brand { margin-bottom: 15px; }
           .admin-nav { flex-direction: row; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
           .admin-nav button { padding: 10px 15px; white-space: nowrap; font-size: 13px; }
@@ -451,7 +451,16 @@ const AdminDashboard = () => {
           .form-grid { grid-template-columns: 1fr; }
           .settings-form { padding: 20px; }
           .table-wrapper { overflow-x: auto; }
-          .admin-table th, .admin-table td { padding: 12px 15px; font-size: 13px; }
+          .admin-table th, .admin-table td { padding: 12px 15px; font-size: 13px; font-weight: 500; }
+        }
+
+        @media (max-width: 480px) {
+          .admin-brand h2 { font-size: 16px; }
+          .h-left h2 { font-size: 20px; }
+          .admin-nav button { padding: 8px 12px; font-size: 11px; }
+          .sc-value { font-size: 26px; }
+          .admin-content { padding: 15px; }
+          .btn-sml { padding: 6px 10px; font-size: 10px; }
         }
       `}</style>
     </div>

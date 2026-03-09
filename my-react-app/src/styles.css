@@ -291,29 +291,40 @@ tr:hover {
 }
 
 /* ========================================= */
-/* 📱 RESPONSIVE */
+/* 📱 RESPONSIVE SYSTEM */
 /* ========================================= */
 
+/* Desktop / Large Screens (Default) */
+
+/* Laptop (max-width: 1024px) */
 @media (max-width: 1024px) {
+  .dashboard {
+    padding: 30px;
+  }
+  
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .about-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Tablet (max-width: 768px) */
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 20px;
+    padding: 12px 20px;
   }
 
   .hero {
     padding: 60px 20px;
     background: var(--dark);
+    background-image: none; /* Simplify gradient if needed */
   }
 
   .hero h2 {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .hero p {
@@ -324,8 +335,8 @@ tr:hover {
     padding: 20px;
   }
 
-  .dashboard h2 {
-    font-size: 20px;
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 
   .form-container {
@@ -333,21 +344,54 @@ tr:hover {
     margin: 30px auto;
   }
 
-  .map-container {
-    height: 300px;
-  }
-
   table {
     display: block;
+    width: 100%;
     overflow-x: auto;
-    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .map-container {
+    height: 350px;
+  }
+
+  .card {
+    padding: 20px;
   }
 }
 
+/* Mobile (max-width: 480px) */
 @media (max-width: 480px) {
   .btn {
     width: 100%;
     margin-bottom: 10px;
+    padding: 14px 20px;
+  }
+
+  .hero h2 {
+    font-size: 24px;
+  }
+
+  .dashboard h2 {
+    font-size: 20px;
+  }
+
+  input, select {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .footer {
+    padding: 15px;
+    font-size: 13px;
+  }
+  
+  .widget {
+    padding: 20px;
+  }
+  
+  .widget .number {
+    font-size: 24px;
   }
 }
 

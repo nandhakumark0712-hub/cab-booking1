@@ -329,7 +329,37 @@ function TrackRide() {
         .feedback-modal textarea { width: 100%; height: 100px; padding: 15px; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: white; border-radius: 12px; margin-bottom: 20px; font-family: inherit; }
         .btn-submit { width: 100%; padding: 15px; background: #fbbf24; color: #1e1e2f; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(251,191,36,0.3); }
 
-        @media (max-width: 900px) { .track-page-container { flex-direction: column; height: auto; } .map-section { height: 300px; } }
+        @media (max-width: 1024px) {
+          .track-page-container { flex-direction: column; height: auto; }
+          .map-section { height: 400px; order: 1; }
+          .status-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); order: 2; }
+          .track-page-wrapper { padding: 15px; }
+        }
+
+        @media (max-width: 768px) {
+          .map-section { height: 350px; }
+          .ride-header h3 { font-size: 16px; }
+        }
+
+        @media (max-width: 480px) {
+          .track-page-container { border-radius: 12px; }
+          .map-section { height: 300px; }
+          .status-sidebar { padding: 20px 15px; }
+          .ride-header h3 { font-size: 14px; }
+          .status-timeline { margin-bottom: 20px; }
+          .timeline-item { gap: 10px; margin-bottom: 10px; }
+          .timeline-marker { width: 28px; height: 28px; font-size: 12px; }
+          .step-label { font-size: 12px; }
+          .driver-card { padding: 15px; border-radius: 12px; }
+          .driver-info { gap: 10px; }
+          .driver-avatar { width: 40px; height: 40px; font-size: 20px; }
+          .driver-name { font-size: 14px; }
+          .plate-number { font-size: 12px; }
+          .car-model { font-size: 12px; }
+          .btn-call, .btn-message { padding: 8px; font-size: 11px; }
+          .btn-cancel { padding: 10px; font-size: 13px; }
+          .sos-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 11px; }
+        }
       `}</style>
     </div>
   );
