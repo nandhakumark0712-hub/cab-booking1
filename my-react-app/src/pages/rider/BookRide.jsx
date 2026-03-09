@@ -248,15 +248,30 @@ function BookRide() {
           .dashboard-map-wrapper { min-height: 300px; }
           .travel-mode-panel { padding: 20px 15px; }
           .panel-label { font-size: 16px; margin-bottom: 15px; }
-          .vehicle-selection-grid { gap: 12px; }
-          .vehicle-selection-card { flex: 0 0 140px; height: 130px; padding: 15px; }
-          .vehicle-icon { font-size: 28px; }
-          .vehicle-info .name { font-size: 14px; }
+          .vehicle-selection-grid { 
+            flex-direction: column; 
+            gap: 15px; 
+            overflow-x: hidden;
+          }
+          .vehicle-selection-card { 
+            flex: 0 0 auto; 
+            width: 100%; 
+            height: auto; 
+            padding: 18px;
+            flex-direction: row;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 15px;
+          }
+          .vehicle-icon { font-size: 32px; margin-bottom: 0; }
+          .vehicle-info { flex: 1; }
+          .vehicle-info .name { font-size: 16px; margin-bottom: 2px; }
           .vehicle-info .desc { font-size: 11px; }
+          .vehicle-price { margin-top: 0; font-size: 15px; }
           .executive-card { padding: 20px 15px; }
           .booking-type-selector button { padding: 10px; font-size: 13px; }
           .confirm-booking-full-btn { border-radius: 12px; }
-          .sos-action-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 12px; }
+          .sos-action-btn { width: 55px; height: 55px; bottom: 20px; right: 20px; font-size: 13px; z-index: 9999; }
         }
       `}</style>
     </div>

@@ -40,7 +40,6 @@ function Navbar() {
                 </filter>
               </defs>
 
-              {/* Location Pin Outer */}
               <path
                 className="pin-path"
                 d="M50 95 C50 95 15 65 15 40 C15 20 30 5 50 5 C70 5 85 20 85 40 C85 65 50 95 50 95 Z"
@@ -49,24 +48,20 @@ function Navbar() {
                 strokeWidth="4"
               />
 
-              {/* Road / Dash lines */}
               <line x1="30" y1="65" x2="70" y2="65" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5,5" className="road-line" />
 
-              {/* Stylized Cab Silhouette */}
               <g className="cab-group">
                 <path
                   d="M35 55 L35 48 C35 45 37 42 40 42 L60 42 C63 42 65 45 65 48 L65 55 L70 55 L70 62 L30 62 L30 55 Z"
                   fill="url(#pinGrad)"
                   filter="url(#glowEffect)"
                 />
-                <rect x="38" y="58" width="6" height="6" rx="3" fill="#1e1e2f" /> {/* Wheel */}
-                <rect x="56" y="58" width="6" height="6" rx="3" fill="#1e1e2f" /> {/* Wheel */}
-                {/* Windows */}
+                <rect x="38" y="58" width="6" height="6" rx="3" fill="#1e1e2f" />
+                <rect x="56" y="58" width="6" height="6" rx="3" fill="#1e1e2f" />
                 <path d="M40 46 L48 46 L48 52 L38 52 Z" fill="#1e1e2f" opacity="0.6" />
                 <path d="M52 46 L60 46 L62 52 L52 52 Z" fill="#1e1e2f" opacity="0.6" />
               </g>
 
-              {/* Speed Lines */}
               <path d="M20 45 L10 45" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" className="speed-line sl-1" />
               <path d="M22 52 L12 52" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" className="speed-line sl-2" />
             </svg>
@@ -74,24 +69,10 @@ function Navbar() {
           <span className="brand-text">WeeFly Cab</span>
         </div>
 
-        {/* Hamburger Toggle */}
-        <div className={`menu-toggle ${isMobileMenuOpen ? "active" : ""}`} onClick={toggleMobileMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
         <ul className={`nav-links ${isMobileMenuOpen ? "mobile-open" : ""}`}>
-          <li>
-            <NavLink to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
-          </li>
+          <li><NavLink to="/" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink></li>
+          <li><a href="#about" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>About Us</a></li>
 
-          {/* New Feature: About Us (Scroll) */}
-          <li>
-            <a href="#about" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>About Us</a>
-          </li>
-
-          {/* Dropdown for Rider */}
           {role === "rider" && (
             <li className="dropdown">
               <span className="dropbtn">Services <span className="arrow">▿</span></span>
@@ -103,7 +84,6 @@ function Navbar() {
             </li>
           )}
 
-          {/* Dropdown for Driver */}
           {role === "driver" && (
             <li className="dropdown">
               <span className="dropbtn">Driver Portal <span className="arrow">▿</span></span>
@@ -115,7 +95,6 @@ function Navbar() {
             </li>
           )}
 
-          {/* Dropdown for Admin */}
           {role === "admin" && (
             <li className="dropdown">
               <span className="dropbtn">Admin Panel <span className="arrow">▿</span></span>
@@ -127,13 +106,10 @@ function Navbar() {
             </li>
           )}
 
-          {/* User Profile for Mobile (shows at the bottom of the list) */}
           {role && (
             <li className="mobile-only-profile">
               <div className="user-profile">
-                <div className="user-avatar">
-                  {username ? username[0].toUpperCase() : "U"}
-                </div>
+                <div className="user-avatar">{username ? username[0].toUpperCase() : "U"}</div>
                 <div className="user-info">
                   <span className="username">{username || "User"}</span>
                   <span className="user-role">{role}</span>
@@ -145,7 +121,6 @@ function Navbar() {
         </ul>
 
         <div className="navbar-actions">
-          {/* New Feature: Notifications Tooltip/Icon */}
           {role && (
             <div className="nav-icon-btn notifications" title="Notifications">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="#fbbf24" style={{ filter: 'drop-shadow(0 0 5px rgba(251, 191, 36, 0.3))' }}>
@@ -156,9 +131,7 @@ function Navbar() {
 
           {role ? (
             <div className="user-profile desktop-only">
-              <div className="user-avatar">
-                {username ? username[0].toUpperCase() : "U"}
-              </div>
+              <div className="user-avatar">{username ? username[0].toUpperCase() : "U"}</div>
               <div className="user-info">
                 <span className="username">{username || "User"}</span>
                 <span className="user-role">{role}</span>
@@ -170,6 +143,12 @@ function Navbar() {
               Get Started
             </button>
           )}
+
+          <div className={`menu-toggle ${isMobileMenuOpen ? "active" : ""}`} onClick={toggleMobileMenu}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
     </nav>
