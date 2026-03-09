@@ -7,6 +7,7 @@ const LocationInput = ({ label, placeholder, initialValue, onSelect, dotColor })
     const [isLoading, setIsLoading] = useState(false);
     const [showList, setShowList] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
+    const [error, setError] = useState(null);
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -20,18 +21,25 @@ const LocationInput = ({ label, placeholder, initialValue, onSelect, dotColor })
         const timer = setTimeout(async () => {
             try {
                 setIsLoading(true);
-                // ALWAYS use the backend API to avoid CORS issues
-                const res = await API.get(`/location/search?q=${encodeURIComponent(query)}&limit=6`);
-                setSuggestions(Array.isArray(res.data) ? res.data : []);
+                setError(null);
+                // Standardizing API endpoint relative to baseURL (/api/ is already in baseURL)
+                const res = await API.get(`location/search?q=${encodeURIComponent(query)}&limit=6`);
+                const data = Array.isArray(res.data) ? res.data : [];
+                setSuggestions(data);
+                if (data.length === 0) {
+                   setError("No locations found for this query");
+                }
                 setShowList(true);
                 setActiveIndex(-1);
             } catch (err) {
-                console.error("Location search error:", err);
+                console.error("Location search API error:", err);
                 setSuggestions([]);
+                setError("Unable to fetch suggestions. Check your connection.");
+                setShowList(true);
             } finally {
                 setIsLoading(false);
             }
-        }, 400);
+        }, 500);
         return () => clearTimeout(timer);
     }, [query]);
 
@@ -165,6 +173,7 @@ const LocationInput = ({ label, placeholder, initialValue, onSelect, dotColor })
                     listStyle: "none",
                 }}>
                     {suggestions.length > 0 ? suggestions.map((item, idx) => {
+                        // Same item mapping logic as before
                         const parts = item.display_name.split(",");
                         const main = parts[0];
                         const sub = parts.slice(1, 4).join(",").trim();
@@ -215,16 +224,16 @@ const LocationInput = ({ label, placeholder, initialValue, onSelect, dotColor })
                                 </div>
                             </li>
                         );
-                    }) : !isLoading && query.length >= 3 ? (
+                    }) : error ? (
                         <li style={{
-                            padding: "25px",
+                            padding: "20px",
                             textAlign: "center",
-                            color: "rgba(255,255,255,0.4)",
+                            color: "#f87171",
                             fontSize: "13px",
-                            fontStyle: "italic",
+                            fontWeight: 600,
                             listStyle: "none",
                         }}>
-                            No results for "{query}"
+                             ⚠️ {error}
                         </li>
                     ) : null}
                 </ul>
