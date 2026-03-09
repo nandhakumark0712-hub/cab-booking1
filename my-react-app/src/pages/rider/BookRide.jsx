@@ -258,7 +258,7 @@ function BookRide() {
         @media (max-width: 768px) {
           .formal-booking-page { padding: 15px; }
           .panel-label { font-size: 18px; }
-          .vehicle-selection-card { flex: 0 0 160px; height: 140px; }
+          .vehicle-selection-card { height: 150px; padding: 15px; }
           .brand-h2 { font-size: 20px; }
           .confirm-booking-full-btn { padding: 15px; font-size: 15px; }
         }
@@ -269,19 +269,21 @@ function BookRide() {
           .travel-mode-panel { padding: 20px 15px; }
           .panel-label { font-size: 16px; margin-bottom: 15px; }
           .vehicle-selection-grid { 
+            display: flex;
             flex-direction: column; 
-            gap: 15px; 
-            overflow-x: hidden;
+            gap: 12px; 
+            width: 100%;
           }
           .vehicle-selection-card { 
-            flex: 0 0 auto; 
             width: 100%; 
             height: auto; 
-            padding: 18px;
+            padding: 15px 20px;
             flex-direction: row;
+            align-items: center;
             justify-content: flex-start;
             text-align: left;
-            gap: 15px;
+            gap: 20px;
+            border-radius: 15px;
           }
           .vehicle-icon { font-size: 32px; margin-bottom: 0; }
           .vehicle-info { flex: 1; }

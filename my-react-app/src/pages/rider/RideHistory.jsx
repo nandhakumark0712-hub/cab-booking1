@@ -159,39 +159,39 @@ function RideHistory() {
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .trips-list { display: flex; flex-direction: column; gap: 20px; }
-        .trip-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s; color: white; }
-        .trip-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.6); border-color: rgba(251,191,36,0.3); }
+        .trip-card { background: rgba(15, 15, 25, 0.7); backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: all 0.3s ease; color: white; }
+        .trip-card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-color: rgba(251,191,36,0.3); }
 
-        .trip-date-id { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .date-block { display: flex; flex-direction: column; gap: 2px; }
-        .date { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 600; }
-        .time { font-size: 11px; color: rgba(255,255,255,0.3); }
-        .right-badges { display: flex; align-items: center; gap: 8px; }
-        .trip-id { color: #fbbf24; background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; }
-        .status-pill { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; }
-        .status-pill.completed { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
-        .status-pill.cancelled { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .trip-date-id { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .date-block { display: flex; flex-direction: column; gap: 4px; }
+        .date { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 700; }
+        .time { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .right-badges { display: flex; align-items: center; gap: 12px; }
+        .trip-id { color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid rgba(251, 191, 36, 0.2); }
+        .status-pill { font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-pill.completed { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-pill.cancelled { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
 
-        .trip-route { position: relative; padding-left: 20px; }
-        .route-point { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .dot.green { background: #10b981; }
-        .dot.red { background: #ef4444; }
-        .addr { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.9); }
-        .route-path { position: absolute; left: 23.5px; top: 18px; height: 25px; border-left: 2px dashed rgba(255,255,255,0.15); }
+        .trip-route { position: relative; padding-left: 25px; display: flex; flex-direction: column; gap: 15px; }
+        .route-point { display: flex; align-items: flex-start; gap: 18px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; box-shadow: 0 0 10px currentColor; }
+        .dot.green { background: #10b981; color: rgba(16,185,129,0.4); }
+        .dot.red { background: #ef4444; color: rgba(239,68,68,0.4); }
+        .addr { font-size: 15px; font-weight: 600; color: rgba(255,255,255,1); line-height: 1.5; word-break: break-word; }
+        .route-path { position: absolute; left: 4px; top: 18px; bottom: 18px; width: 0; border-left: 2px dashed rgba(255,255,255,0.1); }
 
         .trip-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .trip-meta { display: flex; gap: 20px; align-items: center; }
-        .cab-type { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); }
-        .dist { font-size: 13px; color: rgba(255,255,255,0.3); }
-        .fare { font-size: 20px; font-weight: 900; color: #fbbf24; }
+        .trip-meta { display: flex; gap: 24px; align-items: center; }
+        .cab-type { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 6px; }
+        .dist { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500; }
+        .fare { font-size: 24px; font-weight: 950; color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,0.3); }
 
-        .trip-actions { display: flex; gap: 10px; }
-        .btn-invoice, .btn-rebook { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .btn-invoice { background: rgba(255,255,255,0.08); color: white; border: none; }
-        .btn-invoice:hover { background: rgba(255,255,255,0.15); }
-        .btn-rebook { background: #fbbf24; color: #1e1e2f; border: none; }
-        .btn-rebook:hover { box-shadow: 0 4px 15px rgba(251,191,36,0.4); }
+        .trip-actions { display: flex; gap: 12px; }
+        .btn-invoice, .btn-rebook { padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-invoice { background: rgba(0, 0, 0, 0.3); color: white; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-invoice:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+        .btn-rebook { background: #fbbf24; color: #1e1e2f; border: none; box-shadow: 0 4px 12px rgba(251,191,36,0.2); }
+        .btn-rebook:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(251,191,36,0.4); }
 
         @media (max-width: 1024px) {
           .history-container { padding: 0 20px; }
@@ -201,22 +201,24 @@ function RideHistory() {
           .history-page-wrapper { padding: 30px 15px; }
           .page-title { font-size: 24px; }
           .trip-card { padding: 20px; }
-          .trip-meta { gap: 12px; font-size: 12px; }
-          .fare { font-size: 18px; }
+          .trip-meta { gap: 15px; }
+          .fare { font-size: 20px; }
         }
 
         @media (max-width: 480px) {
           .history-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-          .trip-card { padding: 15px; }
-          .trip-date-id { flex-direction: column; gap: 10px; }
-          .right-badges { align-self: flex-start; }
-          .trip-footer { flex-direction: column; gap: 15px; align-items: flex-start; }
-          .trip-meta { flex-wrap: wrap; gap: 10px; justify-content: space-between; width: 100%; }
-          .trip-actions { width: 100%; display: flex; gap: 10px; }
-          .btn-invoice, .btn-rebook { flex: 1; text-align: center; padding: 10px; }
           .page-title { font-size: 22px; }
-          .addr { font-size: 13px; }
-          .spinner { width: 28px; height: 28px; }
+          .trip-card { padding: 18px; border-radius: 16px; }
+          .trip-date-id { flex-direction: column; gap: 12px; padding-bottom: 12px; }
+          .right-badges { width: 100%; justify-content: space-between; }
+          .trip-route { padding-left: 22px; }
+          .addr { font-size: 14px; }
+          .trip-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
+          .trip-meta { flex-direction: column; gap: 8px; align-items: flex-start; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
+          .fare { font-size: 22px; align-self: flex-end; margin-top: -35px; }
+          .trip-actions { width: 100%; display: flex; gap: 12px; }
+          .btn-invoice, .btn-rebook { flex: 1; text-align: center; padding: 12px; }
+          .spinner { width: 30px; height: 30px; }
         }
       `}</style>
         </div>
