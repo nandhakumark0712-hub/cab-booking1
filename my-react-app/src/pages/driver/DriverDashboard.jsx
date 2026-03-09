@@ -89,7 +89,6 @@ function DriverDashboard() {
       setRating(data.rating || 4.8);
       setTotalTrips(data.totalTrips || 0);
       setIsOnline(data.isAvailable);
-      setWalletBalance(data.walletBalance || 0);
       
       // Save full driver info for reuse
       sessionStorage.setItem("driverInfo", JSON.stringify(data));
@@ -116,7 +115,7 @@ function DriverDashboard() {
 
       // Verify explicit earnings strictly from DB trip data correctly
       const todayStr = new Date().toLocaleDateString();
-      let daily = 0, weekly = 0, monthly = 0;
+      let daily = 0, weekly = 0, monthly = 0, allTimeWallet = 0;
       const now = new Date();
       trips.forEach(t => {
           if (t.status !== 'completed') return;
@@ -125,8 +124,10 @@ function DriverDashboard() {
           if (tDate.toLocaleDateString() === todayStr) daily += earned;
           if ((now - tDate) / (1000 * 60 * 60 * 24) <= 7) weekly += earned;
           if ((now - tDate) / (1000 * 60 * 60 * 24) <= 30) monthly += earned;
+          allTimeWallet += earned;
       });
       setEarnings({ daily: Math.round(daily), weekly: Math.round(weekly), monthly: Math.round(monthly) });
+      setWalletBalance(Math.round(allTimeWallet));
     } catch (err) {
       console.error("Error fetching history:", err);
     } finally {
