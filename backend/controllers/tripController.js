@@ -110,6 +110,21 @@ const updateTripStatus = asyncHandler(async (req, res) => {
             io.emit(`rideCancelled_${tripId}`, { tripId, status: "cancelled" });
         } else if (status === "completed") {
             console.log(`Backend: Broadcasting rideCompleted for ${tripId}`);
+            
+            // Update driver's total earnings and total trips
+            if (trip.driver) {
+                const Driver = require("../models/Driver");
+                const driver = await Driver.findById(trip.driver);
+                if (driver) {
+                    const earned = (trip.fare || 0) * 0.8; // 20% commission
+                    driver.totalEarnings += earned;
+                    driver.walletBalance += earned;
+                    driver.totalTrips += 1;
+                    await driver.save();
+                    console.log(`Backend: Updated driver ${trip.driver} stats. Earned: ${earned}`);
+                }
+            }
+            
             io.emit(`rideCompleted_${tripId}`, { tripId, status: "completed" });
         } else if (status === "ongoing") {
             console.log(`Backend: Broadcasting rideStarted for ${tripId}`);
@@ -164,9 +179,37 @@ const getTripHistory = asyncHandler(async (req, res) => {
     res.json(trips);
 });
 
+// @desc    Submit feedback for a trip
+// @route   POST /api/trip/:id/feedback
+// @access  Private
+const submitFeedback = asyncHandler(async (req, res) => {
+    const { rating, review } = req.body;
+    const trip = await Trip.findById(req.params.id);
+
+    if (!trip) {
+        res.status(404);
+        throw new Error("Trip not found");
+    }
+
+    trip.rating = rating;
+    trip.review = review;
+    await trip.save();
+
+    // Optionally update driver's average rating here
+    if (trip.driver) {
+        const reviews = await Trip.find({ driver: trip.driver, rating: { $exists: true } });
+        const avgRating = reviews.reduce((acc, item) => acc + item.rating, 0) / reviews.length;
+        const Driver = require("../models/Driver");
+        await Driver.findByIdAndUpdate(trip.driver, { rating: parseFloat(avgRating.toFixed(1)) });
+    }
+
+    res.json({ message: "Feedback submitted successfully" });
+});
+
 module.exports = {
     bookTrip,
     updateTripStatus,
     getTripById,
-    getTripHistory
+    getTripHistory,
+    submitFeedback
 };

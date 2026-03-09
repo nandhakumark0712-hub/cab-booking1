@@ -89,9 +89,25 @@ const updateAvailability = asyncHandler(async (req, res) => {
     }
 });
 
+// @desc    Get driver reviews
+// @route   GET /api/driver/reviews
+// @access  Private
+const getDriverReviews = asyncHandler(async (req, res) => {
+    const Trip = require("../models/Trip");
+    const reviews = await Trip.find({ 
+        driver: req.user._id, 
+        review: { $exists: true, $ne: "" } 
+    }).select("rating review createdAt customer name")
+    .populate("user", "name")
+    .sort({ createdAt: -1 });
+
+    res.json(reviews);
+});
+
 module.exports = {
     registerDriver,
     getDrivers,
     getDriverProfile,
-    updateAvailability
+    updateAvailability,
+    getDriverReviews
 };

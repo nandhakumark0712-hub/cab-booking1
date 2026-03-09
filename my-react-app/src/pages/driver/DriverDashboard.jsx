@@ -4,7 +4,16 @@ import MapComponent from "../../components/MapComponent";
 import API from "../../services/api";
 import "../../styles.css";
 
-const socket = io("https://cab-booking1.onrender.com");
+const hostname = window.location.hostname;
+const isLocal = 
+  hostname === "localhost" || 
+  hostname === "127.0.0.1" || 
+  /^192\.168\./.test(hostname) || 
+  /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname) || 
+  /^10\./.test(hostname);
+
+const socketUrl = isLocal ? `http://${hostname}:5001` : "https://cab-booking1.onrender.com";
+const socket = io(socketUrl);
 
 function DriverDashboard() {
   // --- States ---
@@ -21,8 +30,9 @@ function DriverDashboard() {
   const [rating, setRating] = useState(4.8);
   const [totalTrips, setTotalTrips] = useState(0);
 
-  const [location, setLocation] = useState({ lat: 13.0827, lng: 80.2707 }); // Chennai Default
-  const [otpInput, setOtpInput] = useState("");
+   const [location, setLocation] = useState({ lat: 13.0827, lng: 80.2707 }); // Chennai Default
+   const [otpInput, setOtpInput] = useState("");
+   const [reviews, setReviews] = useState([]);
 
   // ... (existing effects and actions)
 
@@ -68,29 +78,40 @@ function DriverDashboard() {
     };
   }, [isOnline, activeRide, newRequest]);
 
+  const fetchProfile = async () => {
+    try {
+      const res = await API.get("driver/profile");
+      const data = res.data;
+      setEarnings({
+         daily: data.totalEarnings || 0,
+         weekly: (data.totalEarnings || 0) * 0.9,
+         monthly: (data.totalEarnings || 0) * 3
+      });
+      setRating(data.rating || 4.8);
+      setTotalTrips(data.totalTrips || 0);
+      setIsOnline(data.isAvailable);
+      setWalletBalance(data.walletBalance || 0);
+      
+      // Save full driver info for reuse
+      sessionStorage.setItem("driverInfo", JSON.stringify(data));
+    } catch (err) {
+      console.error("Error fetching driver profile:", err);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const res = await API.get("driver/reviews");
+      setReviews(res.data || []);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    }
+  };
+
   // Fetch real driver profile/stats on load
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await API.get("driver/profile");
-        const data = res.data;
-        setEarnings({
-           daily: data.totalEarnings || 0,
-           weekly: (data.totalEarnings || 0) * 0.9,
-           monthly: (data.totalEarnings || 0) * 3
-        });
-        setRating(data.rating || 4.8);
-        setTotalTrips(data.totalTrips || 0);
-        setIsOnline(data.isAvailable);
-        setWalletBalance(data.walletBalance || 0);
-        
-        // Save full driver info for reuse
-        sessionStorage.setItem("driverInfo", JSON.stringify(data));
-      } catch (err) {
-        console.error("Error fetching driver profile:", err);
-      }
-    };
     fetchProfile();
+    fetchReviews();
   }, []);
 
   // Sync online status with backend
@@ -127,8 +148,9 @@ function DriverDashboard() {
 
           if (isOnline) {
             const tripId = activeRide ? (activeRide._id || activeRide.id) : null;
+            const user = JSON.parse(sessionStorage.getItem("user") || "{}");
             const data = {
-              driverId: JSON.parse(sessionStorage.getItem("user") || "{}")._id || "DRV-001",
+              driverId: user._id,
               tripId: tripId,
               lat: latitude,
               lng: longitude
@@ -182,6 +204,10 @@ function DriverDashboard() {
       setShowKycModal(false);
       alert("Documents uploaded successfully! Support will verify within 24 hours.");
     }, 2000);
+  };
+
+  const handleSOS = () => {
+    alert("⚠️ SOS ALERT: Emergency services notified with your live coordinates.");
   };
 
   const acceptRide = async () => {
@@ -255,13 +281,14 @@ function DriverDashboard() {
     try {
       const tripId = activeRide._id || activeRide.id;
       const earned = (activeRide.fare || 0) * 0.8; // 20% Commission
-      await API.put(`/trip/${tripId}`, { status: "completed" });
-
-      setEarnings(prev => ({ ...prev, daily: prev.daily + earned }));
-      setTotalTrips(prev => prev + 1);
+      await API.put(`trip/${tripId}`, { status: "completed" });
 
       alert(`Trip Completed! You earned ₹${earned.toFixed(2)}`);
       setActiveRide(null);
+      
+      // Refresh Stats and Reviews from DB
+      fetchProfile();
+      fetchReviews();
     } catch (err) {
       alert("Error completing trip");
     }
@@ -385,11 +412,15 @@ function DriverDashboard() {
 
           <div className="ratings-card">
             <h3>Recent Feedback</h3>
-            <div className="feedback-item">
-              <div className="f-stars">⭐⭐⭐⭐⭐</div>
-              <p>"Very polite driver, car was clean."</p>
-              <small>Yesterday</small>
-            </div>
+            {reviews.length > 0 ? reviews.map((r, idx) => (
+              <div key={idx} className="feedback-item">
+                <div className="f-stars">{"⭐".repeat(r.rating)}</div>
+                <p>"{r.review}"</p>
+                <small>{r.user?.name || "Rider"} • {new Date(r.createdAt).toLocaleDateString()}</small>
+              </div>
+            )) : (
+              <div className="dim-text">No reviews yet. Complete more rides to get feedback!</div>
+            )}
           </div>
 
         </div>

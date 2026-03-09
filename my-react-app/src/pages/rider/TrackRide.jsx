@@ -5,7 +5,16 @@ import MapComponent from "../../components/MapComponent";
 import API from "../../services/api";
 
 
-const socket = io("https://cab-booking1.onrender.com");
+const hostname = window.location.hostname;
+const isLocal = 
+  hostname === "localhost" || 
+  hostname === "127.0.0.1" || 
+  /^192\.168\./.test(hostname) || 
+  /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname) || 
+  /^10\./.test(hostname);
+
+const socketUrl = isLocal ? `http://${hostname}:5001` : "https://cab-booking1.onrender.com";
+const socket = io(socketUrl);
 
 // Status configuration
 const STATUS_STEPS = [
@@ -47,15 +56,21 @@ function TrackRide() {
       try {
         const res = await API.get(`trip/${tripId}`);
         if (res.data) {
-          setRideStatus(mapStatus(res.data.status));
+          const fetchedStatus = mapStatus(res.data.status);
+          setRideStatus(fetchedStatus);
+          
           if (res.data.driver && typeof res.data.driver === 'object') {
+            const drv = res.data.driver;
             setDriverDetails({
-              driverName: res.data.driver.name || "Driver",
-              rating: res.data.driver.rating || 4.8,
-              vehicle: (res.data.driver.vehicle && typeof res.data.driver.vehicle === 'object')
-                ? `${res.data.driver.vehicle.make} ${res.data.driver.vehicle.model}`
+              driverName: drv.name || "Driver",
+              rating: drv.rating || 4.8,
+              vehicle: (drv.vehicle && typeof drv.vehicle === 'object')
+                ? `${drv.vehicle.make} ${drv.vehicle.model}`
                 : "Cab"
             });
+            if (drv.location && drv.location.lat) {
+              setDriverLocation({ lat: drv.location.lat, lng: drv.location.lng });
+            }
           }
         }
       } catch (err) {
@@ -148,10 +163,18 @@ function TrackRide() {
     alert("⚠️ SOS ALERT: Emergency services notified with your live coordinates.");
   };
 
-  const submitFeedback = () => {
-    alert(`Thank you! Rating: ${rating}⭐\nFeedback: ${feedback}`);
-    setShowFeedback(false);
-    navigate("/book");
+  const submitFeedback = async () => {
+    if (rating === 0) return alert("Please select a star rating");
+    const tripId = trip._id || trip.id;
+    try {
+      await API.post(`trip/${tripId}/feedback`, { rating, review: feedback });
+      alert("Thank you for your feedback!");
+      setShowFeedback(false);
+      navigate("/book");
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+      alert("Failed to save feedback. Please try again.");
+    }
   };
 
   if (!trip) {
@@ -178,11 +201,10 @@ function TrackRide() {
             drop={dropCoords}
             driver={driverLocation}
           />
-          {/* Driver Marker Overlay */}
           <div className="driver-overlay-indicator">
-            {rideStatus === "searching" ? "Finding a driver..." :
-              rideStatus === "arriving" ? "Driver is arriving now" :
-                rideStatus === "on_trip" ? "On the way to destination" : "Trip Completed"}
+            {rideStatus === "searching" ? "Finding you the best driver..." :
+              rideStatus === "arriving" ? "Driver is headed to your location" :
+                 rideStatus === "on_trip" ? "Live: En route to destination" : "You have arrived!"}
           </div>
         </div>
 
@@ -263,7 +285,7 @@ function TrackRide() {
         <div className="feedback-modal-overlay">
           <div className="feedback-modal">
             <h2>Trip Completed! 🏁</h2>
-            <p>How was your ride with Rajesh Kumar?</p>
+            <p>How was your ride with {driverDetails?.driverName || "your driver"}?</p>
 
             <div className="star-rating">
               {[1, 2, 3, 4, 5].map(s => (
