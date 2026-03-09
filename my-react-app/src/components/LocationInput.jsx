@@ -34,7 +34,8 @@ const LocationInput = ({ label, placeholder, initialValue, onSelect, dotColor })
             } catch (err) {
                 console.error("Location search API error:", err);
                 setSuggestions([]);
-                setError("Unable to fetch suggestions. Check your connection.");
+                const msg = err.response?.data?.message || err.message || "Unable to fetch suggestions";
+                setError(`${msg}. Please try again.`);
                 setShowList(true);
             } finally {
                 setIsLoading(false);
