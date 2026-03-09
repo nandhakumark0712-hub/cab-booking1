@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import MapComponent from "../../components/MapComponent";
-import LocationInput from "../../components/LocationInput";
 import API from "../../services/api";
 import "../../styles.css";
 
@@ -9,7 +8,7 @@ const socket = io("https://cab-booking1.onrender.com");
 
 function DriverDashboard() {
   // --- States ---
-  const [isOnline, setIsOnline] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
   const [kycStatus, setKycStatus] = useState("pending"); // pending, approved, verified
   const [showKycModal, setShowKycModal] = useState(false);
 
@@ -26,16 +25,6 @@ function DriverDashboard() {
 
   // ... (existing effects and actions)
 
-  const handleSelectLocation = (item) => {
-    const newLoc = { lat: parseFloat(item.lat), lng: parseFloat(item.lon) };
-    setLocation(newLoc);
-    // Optionally alert or update server immediately
-    socket.emit("updateLocation", {
-      driverId: JSON.parse(sessionStorage.getItem("user") || "{}")._id || "DRV-001",
-      tripId: activeRide?.id || null,
-      ...newLoc
-    });
-  };
 
   // --- Effects ---
 
@@ -118,29 +107,37 @@ function DriverDashboard() {
     toggleAvailability();
   }, [isOnline]);
 
-  // Track location and emit to server
+  // Track location automatically and emit to server
   useEffect(() => {
-    let interval;
-    if (isOnline) {
-      interval = setInterval(() => {
-        // Mock slight movement for demonstration
-        setLocation(prev => ({
-          lat: prev.lat + (Math.random() - 0.5) * 0.0001,
-          lng: prev.lng + (Math.random() - 0.5) * 0.0001,
-        }));
+    let watchId;
+    if ("geolocation" in navigator) {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const newLoc = { lat: latitude, lng: longitude };
+          setLocation(newLoc);
 
-        const tripId = activeRide ? (activeRide._id || activeRide.id) : null;
-        const data = {
-          driverId: JSON.parse(sessionStorage.getItem("user") || "{}")._id || "DRV-001",
-          tripId: tripId,
-          lat: location.lat,
-          lng: location.lng
-        };
-        socket.emit("updateLocation", data);
-      }, 2000);
+          if (isOnline) {
+            const tripId = activeRide ? (activeRide._id || activeRide.id) : null;
+            const data = {
+              driverId: JSON.parse(sessionStorage.getItem("user") || "{}")._id || "DRV-001",
+              tripId: tripId,
+              lat: latitude,
+              lng: longitude
+            };
+            socket.emit("updateLocation", data);
+          }
+        },
+        (error) => console.error("Geolocation error:", error),
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      console.warn("Geolocation is not supported by this browser.");
     }
-    return () => clearInterval(interval);
-  }, [isOnline, location, activeRide]);
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+    };
+  }, [isOnline, activeRide]);
 
   // Handle Cancellation from Rider
   useEffect(() => {
@@ -353,17 +350,6 @@ function DriverDashboard() {
             </div>
           </div>
 
-          <div className="manual-location-card">
-            <h3>Set Your Location</h3>
-            <p className="dim-text">Search and set your current position manually.</p>
-            <LocationInput
-              label=""
-              placeholder="Search and set location..."
-              initialValue=""
-              onSelect={handleSelectLocation}
-              dotColor="blue"
-            />
-          </div>
         </div>
       </div>
 
