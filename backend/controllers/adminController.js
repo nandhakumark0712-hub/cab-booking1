@@ -129,7 +129,7 @@ const updateTripAdmin = asyncHandler(async (req, res) => {
 // @route   GET /api/admin/reports/riders
 // @access  Private/Admin
 const getRiderReports = asyncHandler(async (req, res) => {
-    const riders = await User.find({ role: "customer" }).select("name email createdAt");
+    const riders = await User.find({ role: { $in: ["rider", "customer", "user"] } }).select("name email createdAt");
 
     const reports = await Promise.all(riders.map(async (rider) => {
         const stats = await Trip.aggregate([
